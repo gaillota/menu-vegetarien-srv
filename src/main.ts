@@ -59,16 +59,21 @@ async function getRecipe({ url }) {
   const createdAt = $('div.blog-main > div.fancy_categories time').attr(
     'datetime',
   );
-  // Temps de préparation
-  // Temps de cuisson
-  // Portions
-  // Ingrédients
-  // Instructions
+  const preparationTime = Number($('span.wpurp-recipe-prep-time').text());
+  const cookingTime = Number($('span.wpurp-recipe-cook-time').text());
+  const servings = Number($('input.advanced-adjust-recipe-servings').val());
+  const ingredients = $('div.wpurp-recipe-ingredients').text();
+  const instructions = $('div.wpurp-recipe-instructions').text();
 
   return {
     title,
     photoUrl,
     createdAt,
+    preparationTime,
+    cookingTime,
+    servings,
+    ingredients,
+    instructions,
   };
 }
 
