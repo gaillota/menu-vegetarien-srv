@@ -32,7 +32,9 @@
   "author": "Jakub Synowiec <github@jakubsynowiec.info>",
   "license": "Apache-2.0",
   "dependencies": {
+    "apollo-server": "^2.14.1",
     "cheerio": "^1.0.0-rc.3",
+    "graphql": "^15.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "tslib": "~1.11.2"

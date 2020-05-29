@@ -1,8 +1,6 @@
 import * as cheerio from 'cheerio';
 import * as request from 'request-promise';
-
-// Paginate recipes
-// Get on recipe
+import { ApolloServer, gql } from 'apollo-server';
 
 const baseUrl = 'https://menu-vegetarien.com/recettes/';
 
@@ -36,9 +34,9 @@ async function getRecipes({ page = 1 } = {}) {
 
     const recipe = {
       type,
-      photoUrl,
       title,
       description,
+      photoUrl,
       url,
     };
 
@@ -53,36 +51,72 @@ async function getRecipe({ url }) {
   const $ = cheerio.load(result);
 
   const title = $('div.blog-main > h1').text();
+  const description = $('span.wpurp-recipe-description').text();
   const photoUrl = $('div.blog-main > div.blog-rightsidebar-img > img').attr(
     'src',
   );
   const createdAt = $('div.blog-main > div.fancy_categories time').attr(
     'datetime',
   );
-  const preparationTime = Number($('span.wpurp-recipe-prep-time').text());
-  const cookingTime = Number($('span.wpurp-recipe-cook-time').text());
+  const preparationTime = Number($('span.wpurp-recipe-prep-time:first-of-type').first().text());
+  const cookingTime = Number($('span.wpurp-recipe-cook-time:first-child').first().text());
   const servings = Number($('input.advanced-adjust-recipe-servings').val());
   const ingredients = $('div.wpurp-recipe-ingredients').text();
   const instructions = $('div.wpurp-recipe-instructions').text();
 
   return {
     title,
+    description,
     photoUrl,
-    createdAt,
+    url,
     preparationTime,
     cookingTime,
     servings,
     ingredients,
     instructions,
+    createdAt,
   };
 }
 
-getRecipes()
-  .then((recipes) =>
-    getRecipe({
-      url: recipes[0].url,
-    }).then(console.log),
-  )
-  .catch((e) => {
-    console.error(`Got error: ${e.message}`);
-  });
+// A schema is a collection of type definitions (hence "typeDefs")
+// that together define the "shape" of queries that are executed against
+// your data.
+const typeDefs = gql`
+  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+
+  # This "Book" type defines the queryable fields for every book in our data source.
+  type Recipe {
+    title: String
+    description: String
+    photoUrl: String
+    url: String
+    preparationTime: Int
+    cookingTime: Int
+    servings: Int
+    ingredients: String
+    instructions: String
+    createAt: String
+  }
+
+  # The "Query" type is special: it lists all of the available queries that
+  # clients can execute, along with the return type for each. In this
+  # case, the "books" query returns an array of zero or more Books (defined above).
+  type Query {
+    recipes: [Recipe]
+    recipe(url: String!): Recipe
+  }
+`;
+
+const resolvers = {
+  Query: {
+    recipes: () => getRecipes(),
+    recipe: (_, { url }) => getRecipe({ url }),
+  },
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
+
+// The `listen` method launches a web server.
+server.listen().then(({ url }) => {
+  console.log(`🚀  Server ready at ${url}`);
+});
