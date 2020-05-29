@@ -102,14 +102,14 @@ const typeDefs = gql`
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    recipes: [Recipe]
+    recipes(page: Int): [Recipe]
     recipe(url: String!): Recipe
   }
 `;
 
 const resolvers = {
   Query: {
-    recipes: () => getRecipes(),
+    recipes: (_, { page }) => getRecipes({ page }),
     recipe: (_, { url }) => getRecipe({ url }),
   },
 };
