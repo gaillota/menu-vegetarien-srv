@@ -6,13 +6,13 @@ import * as request from 'request-promise';
 
 const baseUrl = 'https://menu-vegetarien.com/recettes/';
 
-async function getRecipes({ page = 1 }) {
+async function getRecipes({ page = 1 } = {}) {
   const result = await request.get(
     `${baseUrl}${page > 1 ? `page/${page}/` : ''}`,
   );
-  const $ = cheerio.load(result, {
-    normalizeWhitespace: true,
-  });
+  const $ = cheerio.load(result);
+
+  const recipes = [];
 
   $('div.elementor-posts article').each((_, element) => {
     const $recipe = $(element);
@@ -30,7 +30,7 @@ async function getRecipes({ page = 1 }) {
         'div.elementor-post__text > div.elementor-post__excerpt p:first-of-type',
       )
       .text();
-    const link = $recipe
+    const url = $recipe
       .find('div.elementor-post__text > a.elementor-post__read-more')
       .attr('href');
 
@@ -39,13 +39,45 @@ async function getRecipes({ page = 1 }) {
       photoUrl,
       title,
       description,
-      link,
+      url,
     };
 
-    console.log(JSON.stringify(recipe, null, 2));
+    recipes.push(recipe);
   });
+
+  return recipes;
 }
 
-getRecipes({}).catch((e) => {
-  console.error(`Got error: ${e.message}`);
-});
+async function getRecipe({ url }) {
+  const result = await request.get(url);
+  const $ = cheerio.load(result);
+
+  const title = $('div.blog-main > h1').text();
+  const photoUrl = $('div.blog-main > div.blog-rightsidebar-img > img').attr(
+    'src',
+  );
+  const createdAt = $('div.blog-main > div.fancy_categories time').attr(
+    'datetime',
+  );
+  // Temps de préparation
+  // Temps de cuisson
+  // Portions
+  // Ingrédients
+  // Instructions
+
+  return {
+    title,
+    photoUrl,
+    createdAt,
+  };
+}
+
+getRecipes()
+  .then((recipes) =>
+    getRecipe({
+      url: recipes[0].url,
+    }).then(console.log),
+  )
+  .catch((e) => {
+    console.error(`Got error: ${e.message}`);
+  });
