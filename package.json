@@ -15,6 +15,7 @@
     "eslint-config-prettier": "~6.11.0",
     "eslint-plugin-jest": "~23.10.0",
     "jest": "~25.2.7",
+    "nodemon": "^2.0.4",
     "prettier": "~2.0.5",
     "rimraf": "~3.0.2",
     "ts-jest": "~25.5.1",
@@ -28,7 +29,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "start": "node build/src/main.js"
+    "start": "node build/src/main.js",
+    "start:dev": "nodemon build/src/main.js"
   },
   "author": "Jakub Synowiec <github@jakubsynowiec.info>",
   "license": "Apache-2.0",
