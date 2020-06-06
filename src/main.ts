@@ -58,11 +58,33 @@ async function getRecipe({ url }) {
   const createdAt = $('div.blog-main > div.fancy_categories time').attr(
     'datetime',
   );
-  const preparationTime = Number($('span.wpurp-recipe-prep-time:first-of-type').first().text());
-  const cookingTime = Number($('span.wpurp-recipe-cook-time:first-child').first().text());
+  const preparationTime = Number(
+    $('span.wpurp-recipe-prep-time').first().text(),
+  );
+  const cookingTime = Number($('span.wpurp-recipe-cook-time').first().text());
   const servings = Number($('input.advanced-adjust-recipe-servings').val());
-  const ingredients = $('div.wpurp-recipe-ingredients').text();
-  const instructions = $('div.wpurp-recipe-instructions').text();
+
+  const ingredients = [];
+  $('ul.wpurp-recipe-ingredient-container')
+    .first()
+    .children('li.wpurp-recipe-ingredient')
+    .each((_, element) => {
+      const $ingredient = $(element);
+
+      ingredients.push($ingredient.text());
+    });
+
+  const instructions = [];
+  $('ol.wpurp-recipe-instruction-container li.wpurp-recipe-instruction').each(
+    (_, element) => {
+      const $instruction = $(element);
+      const text = $instruction
+        .find('span.wpurp-recipe-instruction-text')
+        .text();
+
+      instructions.push(text);
+    },
+  );
 
   return {
     title,
@@ -93,8 +115,8 @@ const typeDefs = gql`
     preparationTime: Int
     cookingTime: Int
     servings: Int
-    ingredients: String
-    instructions: String
+    ingredients: [String]
+    instructions: [String]
     createAt: String
   }
 
