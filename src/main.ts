@@ -49,7 +49,16 @@ async function getRecipes({ keywords = '', page = 1 } = {}) {
     recipes.push(recipe);
   });
 
-  return recipes;
+  const pageLabelRegex = /Page(\d+)/;
+  const pagesCountLabel = $('nav.elementor-pagination a.page-numbers').last().text();
+  const [, pagesCount] = pageLabelRegex.exec(pagesCountLabel) || [];
+
+  return {
+    page,
+    pagesCount,
+    hasMore: Number(pagesCount) > page,
+    data: recipes,
+  };
 }
 
 async function getRecipe({ url }) {
@@ -110,9 +119,6 @@ async function getRecipe({ url }) {
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
-
-  # This "Book" type defines the queryable fields for every book in our data source.
   type Recipe {
     title: String
     description: String
@@ -126,13 +132,16 @@ const typeDefs = gql`
     createAt: String
   }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
+  type RecipesPaginationResult {
+    page: Int!
+    pagesCount: Int!
+    hasMore: Boolean!
+    data: [Recipe]
+  }
+
   type Query {
-    recipes(keywords: String, page: Int): [Recipe]
+    recipes(keywords: String, page: Int): RecipesPaginationResult
     recipe(url: String!): Recipe
-    searchRecipes(keywords: String!): [Recipe]
   }
 `;
 
