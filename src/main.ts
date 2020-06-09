@@ -56,7 +56,7 @@ async function getRecipes({ keywords = '', page = 1 } = {}) {
   return {
     page,
     pagesCount,
-    hasMore: Number(pagesCount) > page,
+    hasMore: !!pagesCount && Number(pagesCount) > page,
     data: recipes,
   };
 }
@@ -134,7 +134,7 @@ const typeDefs = gql`
 
   type RecipesPaginationResult {
     page: Int!
-    pagesCount: Int!
+    pagesCount: Int
     hasMore: Boolean!
     data: [Recipe]
   }
