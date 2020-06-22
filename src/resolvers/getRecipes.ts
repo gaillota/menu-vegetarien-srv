@@ -1,6 +1,6 @@
 import * as request from 'request-promise';
 
-import parseRecipesList from '../parsers/list';
+import parseRecipesList from '../parsers/recipes';
 import { baseUrl } from "../constants";
 
 function getPaginationUrl({ keywords, page }) {
