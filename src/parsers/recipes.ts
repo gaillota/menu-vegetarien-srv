@@ -1,4 +1,7 @@
 import * as cheerio from 'cheerio';
+import execRegex from "../utils/regex";
+
+const pageLabelRegex = /Page(\d+)/;
 
 function parseRecipesList(html) {
   const $ = cheerio.load(html);
@@ -36,11 +39,10 @@ function parseRecipesList(html) {
     recipes.push(recipe);
   });
 
-  const pageLabelRegex = /Page(\d+)/;
   const pagesCountLabel = $('nav.elementor-pagination a.page-numbers')
     .last()
     .text();
-  const [, pagesCount] = pageLabelRegex.exec(pagesCountLabel) || [];
+  const pagesCount = execRegex(pageLabelRegex, pagesCountLabel);
 
   return { recipes, pagesCount };
 }
