@@ -2,12 +2,13 @@ import { ApolloServer, gql } from 'apollo-server';
 
 import getRecipes from "./resolvers/getRecipes";
 import getRecipe from "./resolvers/getRecipe";
+import getWeeklyMenus from "./resolvers/getWeeklyMenus";
 
 const typeDefs = gql`
   type Recipe {
-    title: String
+    title: String!
     description: String
-    photoUrl: String
+    photoUrl: String!
     url: String
     preparationTime: Int
     cookingTime: Int
@@ -17,6 +18,20 @@ const typeDefs = gql`
     createAt: String
   }
 
+  type DailyMenu {
+    starter: Recipe
+    dish: Recipe
+    dessert: Recipe
+  }
+
+  type WeeklyMenu {
+    title: String!
+    description: String
+    photoUrl: String!
+    date: String
+    dailyMenus: [DailyMenu]
+  }
+
   type RecipesPaginationResult {
     page: Int!
     pagesCount: Int
@@ -24,9 +39,17 @@ const typeDefs = gql`
     data: [Recipe]
   }
 
+  type WeeklyMenusPaginationResult {
+    page: Int!
+    pagesCount: Int
+    hasMore: Boolean!
+    data: [WeeklyMenu]
+  }
+
   type Query {
     recipes(keywords: String, page: Int): RecipesPaginationResult
     recipe(url: String!): Recipe
+    weeklyMenus(page: Int): WeeklyMenusPaginationResult
   }
 `;
 
@@ -34,6 +57,7 @@ const resolvers = {
   Query: {
     recipes: (_, { keywords, page }) => getRecipes({ keywords, page }),
     recipe: (_, { url }) => getRecipe({ url }),
+    weeklyMenus: (_, { page }) => getWeeklyMenus({ page }),
   },
 };
 
