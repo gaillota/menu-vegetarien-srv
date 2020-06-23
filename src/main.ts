@@ -1,9 +1,9 @@
 import { ApolloServer, gql } from 'apollo-server';
 
-import getRecipes from "./resolvers/getRecipes";
-import getRecipe from "./resolvers/getRecipe";
-import getWeeklyMenus from "./resolvers/getWeeklyMenus";
-import getMenu from "./resolvers/getMenu";
+import getRecipes from './resolvers/getRecipes';
+import getRecipe from './resolvers/getRecipe';
+import getWeeklyMenus from './resolvers/getWeeklyMenus';
+import getMenu from './resolvers/getMenu';
 
 const typeDefs = gql`
   type Recipe {
@@ -65,7 +65,7 @@ const resolvers = {
   },
 };
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ typeDefs, resolvers, introspection: true });
 
 // The `listen` method launches a web server.
 server.listen(process.env.PORT || 4000).then(({ url }) => {
