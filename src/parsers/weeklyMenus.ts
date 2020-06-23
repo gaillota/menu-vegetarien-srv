@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio';
 
 const dateRegex = /([0-9]{1,2})(\s*)[a-zéû]+(\s*)(\d{4})/;
-const pageLabelRegex = /Page(\d+)/;
+const pageLabelRegex = /page(\d+)/;
 
 function parseWeeklyMenus(html) {
   const $ = cheerio.load(html);
@@ -26,7 +26,7 @@ function parseWeeklyMenus(html) {
     const url = $menu
       .find('div.elementor-post__text > a.elementor-post__read-more')
       .attr('href');
-    const [date] = dateRegex.exec(title) || [];
+    const [date] = dateRegex.exec(title.toLowerCase()) || [];
 
     const menu = {
       title,
@@ -42,7 +42,7 @@ function parseWeeklyMenus(html) {
   const pagesCountLabel = $('nav.elementor-pagination a.page-numbers')
     .last()
     .text();
-  const [, pagesCount] = pageLabelRegex.exec(pagesCountLabel) || [];
+  const [, pagesCount] = pageLabelRegex.exec(pagesCountLabel.toLowerCase()) || [];
 
   return { menus, pagesCount };
 }
