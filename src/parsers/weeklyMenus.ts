@@ -1,8 +1,6 @@
 import * as cheerio from 'cheerio';
 
-import execRegex from "../utils/regex";
-
-const dateRegex = /(.*)Semaine du (.*)\.+/;
+const dateRegex = /([0-9]{1,2})(\s*)[a-zéû]+(\s*)(\d{4})/;
 const pageLabelRegex = /Page(\d+)/;
 
 function parseWeeklyMenus(html) {
@@ -28,9 +26,9 @@ function parseWeeklyMenus(html) {
     const url = $menu
       .find('div.elementor-post__text > a.elementor-post__read-more')
       .attr('href');
-    const date = execRegex(dateRegex, title);
+    const [date] = dateRegex.exec(title) || [];
 
-    const recipe = {
+    const menu = {
       title,
       description,
       photoUrl,
@@ -38,13 +36,13 @@ function parseWeeklyMenus(html) {
       date,
     };
 
-    menus.push(recipe);
+    menus.push(menu);
   });
 
   const pagesCountLabel = $('nav.elementor-pagination a.page-numbers')
     .last()
     .text();
-  const pagesCount = execRegex(pageLabelRegex, pagesCountLabel);
+  const [, pagesCount] = pageLabelRegex.exec(pagesCountLabel) || [];
 
   return { menus, pagesCount };
 }

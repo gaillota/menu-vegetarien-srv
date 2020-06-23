@@ -29,6 +29,7 @@ const typeDefs = gql`
     description: String
     photoUrl: String!
     date: String
+    url: String
     dailyMenus: [DailyMenu]
   }
 
