@@ -1,7 +1,6 @@
 import * as cheerio from 'cheerio';
 
-const dateRegex = /([0-9]{1,2})(\s*)[a-zéû]+(\s*)(\d{4})/;
-const pageLabelRegex = /page(\d+)/;
+import { dateRegex, pageLabelRegex } from "../constants";
 
 function parseWeeklyMenus(html) {
   const $ = cheerio.load(html);

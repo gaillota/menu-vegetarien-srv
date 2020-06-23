@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio';
 
-const pageLabelRegex = /page(\d+)/;
+import { pageLabelRegex } from "../constants";
 
 function parseRecipesList(html) {
   const $ = cheerio.load(html);
