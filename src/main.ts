@@ -3,6 +3,7 @@ import { ApolloServer, gql } from 'apollo-server';
 import getRecipes from "./resolvers/getRecipes";
 import getRecipe from "./resolvers/getRecipe";
 import getWeeklyMenus from "./resolvers/getWeeklyMenus";
+import getMenu from "./resolvers/getMenu";
 
 const typeDefs = gql`
   type Recipe {
@@ -51,6 +52,7 @@ const typeDefs = gql`
     recipes(keywords: String, page: Int): RecipesPaginationResult
     recipe(url: String!): Recipe
     weeklyMenus(page: Int): WeeklyMenusPaginationResult
+    menu(url: String!): WeeklyMenu
   }
 `;
 
@@ -59,6 +61,7 @@ const resolvers = {
     recipes: (_, { keywords, page }) => getRecipes({ keywords, page }),
     recipe: (_, { url }) => getRecipe({ url }),
     weeklyMenus: (_, { page }) => getWeeklyMenus({ page }),
+    menu: (_, { url }) => getMenu({ url }),
   },
 };
 
