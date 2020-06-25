@@ -1,8 +1,9 @@
-import * as cheerio from 'cheerio';
+import * as cheerio from "cheerio";
 
 import { dateRegex, pageLabelRegex } from "../constants";
+import { ParsingResult, WeeklyMenu } from "../types";
 
-function parseWeeklyMenus(html) {
+function parseWeeklyMenus(html): ParsingResult<WeeklyMenu> {
   const $ = cheerio.load(html);
 
   const menus = [];
@@ -41,9 +42,10 @@ function parseWeeklyMenus(html) {
   const pagesCountLabel = $('nav.elementor-pagination a.page-numbers')
     .last()
     .text();
-  const [, pagesCount] = pageLabelRegex.exec(pagesCountLabel.toLowerCase()) || [];
+  const [, pagesCountText] =
+    pageLabelRegex.exec(pagesCountLabel.toLowerCase()) || [];
 
-  return { menus, pagesCount };
+  return { data: menus, pagesCount: Number(pagesCountText) };
 }
 
 export default parseWeeklyMenus;

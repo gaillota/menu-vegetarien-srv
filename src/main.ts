@@ -1,9 +1,10 @@
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer, gql } from "apollo-server";
 
-import getRecipes from './resolvers/getRecipes';
-import getRecipe from './resolvers/getRecipe';
-import getWeeklyMenus from './resolvers/getWeeklyMenus';
-import getMenu from './resolvers/getMenu';
+import getRecipes from "./resolvers/getRecipes";
+import getRecipe from "./resolvers/getRecipe";
+import getWeeklyMenus from "./resolvers/getWeeklyMenus";
+import getMenu from "./resolvers/getMenu";
+import { PaginationResult, Recipe, WeeklyMenu } from "./types";
 
 const typeDefs = gql`
   type Recipe {
@@ -58,10 +59,10 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-    recipes: (_, { keywords, page }) => getRecipes({ keywords, page }),
-    recipe: (_, { url }) => getRecipe({ url }),
-    weeklyMenus: (_, { page }) => getWeeklyMenus({ page }),
-    menu: (_, { url }) => getMenu({ url }),
+    recipes: (_, { keywords, page }): Promise<PaginationResult<Recipe>> => getRecipes({ keywords, page }),
+    recipe: (_, { url }): Promise<Recipe> => getRecipe({ url }),
+    weeklyMenus: (_, { page }): Promise<PaginationResult<WeeklyMenu>> => getWeeklyMenus({ page }),
+    weeklyMenu: (_, { url }): Promise<WeeklyMenu> => getMenu({ url }),
   },
 };
 

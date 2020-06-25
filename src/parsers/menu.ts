@@ -1,5 +1,6 @@
-import * as cheerio from "cheerio";
-import { dateRegex } from "../constants";
+import * as cheerio from 'cheerio';
+import { dateRegex } from '../constants';
+import { WeeklyMenu } from '../types';
 
 const menuIndexes = [2, 4, 7, 9, 11];
 const indexToMeal = {
@@ -8,7 +9,7 @@ const indexToMeal = {
   2: 'dessert',
 };
 
-function parseMenu(html) {
+function parseMenu(html): WeeklyMenu {
   const $ = cheerio.load(html);
   const title = $('div.blog-main > h1').text();
   const description = $('div.elementor-text-editor p').eq(1).text();
@@ -39,7 +40,7 @@ function parseMenu(html) {
         };
       });
 
-      dailyMenus.push(menu)
+      dailyMenus.push(menu);
     }
   });
 

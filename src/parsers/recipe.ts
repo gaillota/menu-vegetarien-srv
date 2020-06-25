@@ -1,6 +1,8 @@
 import * as cheerio from 'cheerio';
 
-function parseRecipe(html) {
+import { Recipe } from '../types';
+
+function parseRecipe(html): Recipe {
   const $ = cheerio.load(html);
   const title = $('div.blog-main > h1').text();
   const description = $('span.wpurp-recipe-description').text();
@@ -51,4 +53,4 @@ function parseRecipe(html) {
   };
 }
 
-export default parseRecipe
+export default parseRecipe;

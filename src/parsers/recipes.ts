@@ -1,8 +1,11 @@
 import * as cheerio from 'cheerio';
 
-import { pageLabelRegex } from "../constants";
+import { pageLabelRegex } from '../constants';
+import { PaginationResult, Recipe } from '../types';
 
-function parseRecipesList(html) {
+function parseRecipesList(
+  html,
+): Pick<PaginationResult<Recipe>, 'data' | 'pagesCount'> {
   const $ = cheerio.load(html);
 
   const recipes = [];
@@ -41,9 +44,10 @@ function parseRecipesList(html) {
   const pagesCountLabel = $('nav.elementor-pagination a.page-numbers')
     .last()
     .text();
-  const [, pagesCount] = pageLabelRegex.exec(pagesCountLabel.toLowerCase()) || [];
+  const [, pagesCountText] =
+    pageLabelRegex.exec(pagesCountLabel.toLowerCase()) || [];
 
-  return { recipes, pagesCount };
+  return { data: recipes, pagesCount: Number(pagesCountText) };
 }
 
 export default parseRecipesList;

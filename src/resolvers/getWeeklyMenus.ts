@@ -1,9 +1,10 @@
-import * as request from 'request-promise';
+import * as request from "request-promise";
 
-import { baseUrl } from '../constants';
+import { baseUrl } from "../constants";
 import parseRecipesList from "../parsers/weeklyMenus";
+import { PaginationResult, WeeklyMenu } from "../types";
 
-function getPath({ page }) {
+function getPath({ page }): string {
   const path = '/menu-vegetarien-semaine';
 
   if (page > 1) {
@@ -13,21 +14,21 @@ function getPath({ page }) {
   return path;
 }
 
-function getUrl({ page }) {
+function getUrl({ page }): string {
   const path = getPath({ page });
   return `${baseUrl}${path}`;
 }
 
-async function getWeeklyMenus({ page }) {
+async function getWeeklyMenus({ page }): Promise<PaginationResult<WeeklyMenu>> {
   const url = getUrl({ page });
   const result = await request.get(url);
-  const { menus, pagesCount } = parseRecipesList(result);
+  const { data, pagesCount } = parseRecipesList(result);
 
   return {
+    data,
     page,
     pagesCount,
     hasMore: !!pagesCount && Number(pagesCount) > page,
-    data: menus,
   };
 }
 
