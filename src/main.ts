@@ -53,7 +53,7 @@ const typeDefs = gql`
     recipes(keywords: String, page: Int): RecipesPaginationResult
     recipe(url: String!): Recipe
     weeklyMenus(page: Int): WeeklyMenusPaginationResult
-    menu(url: String!): WeeklyMenu
+    weeklyMenu(url: String!): WeeklyMenu
   }
 `;
 
