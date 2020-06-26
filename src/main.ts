@@ -1,3 +1,4 @@
+require('dotenv').config();
 import { ApolloServer, gql } from "apollo-server";
 
 import getRecipes from "./resolvers/getRecipes";
@@ -5,6 +6,7 @@ import getRecipe from "./resolvers/getRecipe";
 import getWeeklyMenus from "./resolvers/getWeeklyMenus";
 import getMenu from "./resolvers/getMenu";
 import { PaginationResult, Recipe, WeeklyMenu } from "./types";
+import { searchRecipes } from './algolia/searchRecipes';
 
 const typeDefs = gql`
   type Recipe {
@@ -54,6 +56,7 @@ const typeDefs = gql`
     recipe(url: String!): Recipe
     weeklyMenus(page: Int): WeeklyMenusPaginationResult
     weeklyMenu(url: String!): WeeklyMenu
+    searchRecipes(query: String!): [Recipe]
   }
 `;
 
@@ -63,6 +66,7 @@ const resolvers = {
     recipe: (_, { url }): Promise<Recipe> => getRecipe({ url }),
     weeklyMenus: (_, { page }): Promise<PaginationResult<WeeklyMenu>> => getWeeklyMenus({ page }),
     weeklyMenu: (_, { url }): Promise<WeeklyMenu> => getMenu({ url }),
+    searchRecipes: (_, { query }): Promise<Array<Recipe>> => searchRecipes(query),
   },
 };
 

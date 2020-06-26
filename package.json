@@ -6,6 +6,7 @@
     "node": ">= 12.13 <13"
   },
   "devDependencies": {
+    "@types/algoliasearch": "^3.34.10",
     "@types/cheerio": "^0.22.18",
     "@types/jest": "~25.2.1",
     "@types/node": "~12.12.38",
@@ -35,8 +36,10 @@
   "author": "Jakub Synowiec <github@jakubsynowiec.info>",
   "license": "Apache-2.0",
   "dependencies": {
+    "algoliasearch": "^4.3.0",
     "apollo-server": "^2.14.1",
     "cheerio": "^1.0.0-rc.3",
+    "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
