@@ -5,12 +5,6 @@ import { indexAllRecipes } from './algolia/indexAllRecipes';
 program
   .command('indexAllRecipes')
   .description('parses and indexes all recipes')
-  .action(async () => {
-    try {
-      await indexAllRecipes();
-    } catch (e) {
-      console.error(e);
-    }
-  });
+  .action(async () => await indexAllRecipes());
 
 program.parse(process.argv);
