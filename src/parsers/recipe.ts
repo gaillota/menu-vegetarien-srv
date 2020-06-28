@@ -24,7 +24,6 @@ function parseRecipe(html): Recipe {
     .eq(1)
     .find('div.wpurp-recipe-ingredient-group-container')
     .each((i, element) => {
-      console.log(i);
       const currentIngredients = [];
       const $group = $(element);
       const $rows = $group.find('div.wpurp-rows-row');
