@@ -8,6 +8,7 @@ export interface Recipe {
   cookingTime?: number;
   servings?: number;
   ingredients?: Array<string>;
+  otherIngredients?: Array<string>;
   instructions?: Array<string>;
   createdAt?: string;
 }

@@ -19,13 +19,38 @@ function parseRecipe(html): Recipe {
   const servings = Number($('input.advanced-adjust-recipe-servings').val());
 
   const ingredients = [];
-  $('ul.wpurp-recipe-ingredient-container')
-    .first()
-    .children('li.wpurp-recipe-ingredient')
-    .each((_, element) => {
-      const $ingredient = $(element);
+  const otherIngredients = [];
+  $('div.wpurp-recipe-ingredients')
+    .eq(1)
+    .find('div.wpurp-recipe-ingredient-group-container')
+    .each((i, element) => {
+      console.log(i);
+      const currentIngredients = [];
+      const $group = $(element);
+      const $rows = $group.find('div.wpurp-rows-row');
+      const title = $rows.first().text().trim();
 
-      ingredients.push($ingredient.text());
+      $rows
+        .children('ul.wpurp-recipe-ingredient-container')
+        .first()
+        .children('li.wpurp-recipe-ingredient')
+        .each((_, element) => {
+          const ingredient = $(element).text();
+
+          currentIngredients.push(ingredient);
+        });
+
+      // Main ingredients
+      if (!title) {
+        ingredients.push(...currentIngredients);
+        return;
+      }
+
+      // Other ingredients
+      otherIngredients.push({
+        title,
+        ingredients: currentIngredients,
+      });
     });
 
   const instructions = [];
@@ -48,6 +73,7 @@ function parseRecipe(html): Recipe {
     cookingTime,
     servings,
     ingredients,
+    otherIngredients,
     instructions,
     createdAt,
   };
