@@ -2,37 +2,48 @@ import * as cheerio from 'cheerio';
 
 import { Recipe } from '../types';
 
+const TITLE_SELECTOR = 'div.blog-main > h1';
+const DESCRIPTION_SELECTOR = 'span.wpurp-recipe-description';
+const PHOTO_SELECTOR = 'div.blog-main > div.blog-rightsidebar-img > img';
+const CREATED_AT_SELECTOR = 'div.blog-main > div.fancy_categories time';
+const PREPARATION_TIME_SELECTOR = 'span.wpurp-recipe-prep-time';
+const COOKING_TIME_SELECTOR = 'span.wpurp-recipe-cook-time';
+const SERVINGS_SELECTOR = 'input.advanced-adjust-recipe-servings';
+const INGREDIENTS_SELECTOR = 'div.wpurp-recipe-ingredients';
+const INGREDIENTS_GROUP_SELECTOR =
+  'div.wpurp-recipe-ingredient-group-container';
+const INGREDIENTS_ROW_SELECTOR = 'div.wpurp-rows-row';
+const INGREDIENTS_LIST_SELECTOR = 'ul.wpurp-recipe-ingredient-container';
+const INGREDIENTS_LIST_ITEM_SELECTOR = 'li.wpurp-recipe-ingredient';
+const INSTRUCTIONS_ITEM_SELECTOR =
+  'ol.wpurp-recipe-instruction-container li.wpurp-recipe-instruction';
+const INSTRUCTIONS_TEXT_SELECTOR = 'span.wpurp-recipe-instruction-text';
+
 function parseRecipe(html): Recipe {
   const $ = cheerio.load(html);
-  const title = $('div.blog-main > h1').text();
-  const description = $('span.wpurp-recipe-description').text();
-  const photoUrl = $('div.blog-main > div.blog-rightsidebar-img > img').attr(
-    'src',
-  );
-  const createdAt = $('div.blog-main > div.fancy_categories time').attr(
-    'datetime',
-  );
-  const preparationTime = Number(
-    $('span.wpurp-recipe-prep-time').first().text(),
-  );
-  const cookingTime = Number($('span.wpurp-recipe-cook-time').first().text());
-  const servings = Number($('input.advanced-adjust-recipe-servings').val());
+  const title = $(TITLE_SELECTOR).text();
+  const description = $(DESCRIPTION_SELECTOR).text();
+  const photoUrl = $(PHOTO_SELECTOR).attr('src');
+  const createdAt = $(CREATED_AT_SELECTOR).attr('datetime');
+  const preparationTime = Number($(PREPARATION_TIME_SELECTOR).first().text());
+  const cookingTime = Number($(COOKING_TIME_SELECTOR).first().text());
+  const servings = Number($(SERVINGS_SELECTOR).val());
 
   const ingredients = [];
   const otherIngredients = [];
-  $('div.wpurp-recipe-ingredients')
+  $(INGREDIENTS_SELECTOR)
     .eq(1)
-    .find('div.wpurp-recipe-ingredient-group-container')
-    .each((i, element) => {
+    .find(INGREDIENTS_GROUP_SELECTOR)
+    .each((_, element) => {
       const currentIngredients = [];
       const $group = $(element);
-      const $rows = $group.find('div.wpurp-rows-row');
+      const $rows = $group.find(INGREDIENTS_ROW_SELECTOR);
       const title = $rows.first().text().trim();
 
       $rows
-        .children('ul.wpurp-recipe-ingredient-container')
+        .children(INGREDIENTS_LIST_SELECTOR)
         .first()
-        .children('li.wpurp-recipe-ingredient')
+        .children(INGREDIENTS_LIST_ITEM_SELECTOR)
         .each((_, element) => {
           const ingredient = $(element).text();
 
@@ -53,16 +64,12 @@ function parseRecipe(html): Recipe {
     });
 
   const instructions = [];
-  $('ol.wpurp-recipe-instruction-container li.wpurp-recipe-instruction').each(
-    (_, element) => {
-      const $instruction = $(element);
-      const text = $instruction
-        .find('span.wpurp-recipe-instruction-text')
-        .text();
+  $(INSTRUCTIONS_ITEM_SELECTOR).each((_, element) => {
+    const $instruction = $(element);
+    const text = $instruction.find(INSTRUCTIONS_TEXT_SELECTOR).text();
 
-      instructions.push(text);
-    },
-  );
+    instructions.push(text);
+  });
 
   return {
     title,
