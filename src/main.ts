@@ -9,6 +9,11 @@ import { PaginationResult, Recipe, WeeklyMenu } from "./types";
 import { searchRecipes } from './algolia/searchRecipes';
 
 const typeDefs = gql`
+  type IngredientGroup {
+    title:  String!
+    ingredients: [String]!
+  }
+
   type Recipe {
     title: String!
     description: String
@@ -18,6 +23,7 @@ const typeDefs = gql`
     cookingTime: Int
     servings: Int
     ingredients: [String]
+    otherIngredients: [IngredientGroup]
     instructions: [String]
     createAt: String
   }
