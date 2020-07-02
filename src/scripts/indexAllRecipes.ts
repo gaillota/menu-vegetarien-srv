@@ -1,13 +1,13 @@
 import getRecipes from '../resolvers/getRecipes';
-import { indexRecipes } from './indexRecipes';
+import { indexRecipes } from '../algolia/indexRecipes';
 
 export async function indexAllRecipes(): Promise<void> {
-  let hasMore = true;
+  let hasMore;
   let currentPage = 1;
-  while (hasMore) {
+  do {
     const result = await getRecipes({ page: currentPage });
     hasMore = result.hasMore;
     currentPage++;
     await indexRecipes(result.data);
-  }
+  } while (hasMore)
 }

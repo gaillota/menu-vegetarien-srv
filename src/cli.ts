@@ -1,6 +1,6 @@
 require('dotenv').config();
 import { program } from 'commander';
-import { indexAllRecipes } from './algolia/indexAllRecipes';
+import { indexAllRecipes } from './scripts/indexAllRecipes';
 
 program
   .command('indexAllRecipes')

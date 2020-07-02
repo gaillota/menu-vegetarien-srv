@@ -1,7 +1,8 @@
 import * as cheerio from 'cheerio';
 
-import { pageLabelRegex } from '../constants';
+import { pageLabelRegex, slugRegex } from "../constants";
 import { PaginationResult, Recipe } from '../types';
+import sha256 from '../utils/sha256';
 
 function parseRecipesList(
   html,
@@ -29,10 +30,14 @@ function parseRecipesList(
     const url = $recipe
       .find('div.elementor-post__text > a.elementor-post__read-more')
       .attr('href');
+    const id = sha256(title);
+    const [, slug] = slugRegex.exec(url) || []
 
     const recipe = {
+      id,
       type,
       title,
+      slug,
       description,
       photoUrl,
       url,
