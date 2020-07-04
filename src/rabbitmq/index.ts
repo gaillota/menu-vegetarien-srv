@@ -4,6 +4,10 @@ import * as globCb from 'glob';
 import * as path from 'path';
 import * as util from 'util';
 import { Queue } from '../types';
+import { Signale } from 'signale';
+import * as chalk from 'chalk';
+
+const signale = new Signale({ scope: 'rabbit' })
 
 const glob = util.promisify(globCb)
 
@@ -26,7 +30,22 @@ export async function initRabbit(): Promise<void> {
   await initTopology()
 
   const workerPaths = await glob('/*.js', { root: path.join(__dirname, '../workers') })
-  const workers = workerPaths.map(require)
+  const workers = workerPaths.map((p) => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const worker = require(p);
+
+    const workerShortName = p.match(/\/(workers\/[^/]+\.js$)/)[1]
+
+    if (!worker.queue) {
+      throw new Error(chalk`Missing export {yellow queue} in worker {yellow ${workerShortName}}`)
+    }
+
+    if (!worker.work) {
+      throw new Error(chalk`Missing export {yellow work} in worker {yellow ${workerShortName}}`)
+    }
+
+    return worker;
+  })
 
   for (const worker of workers) {
     await channel.consume(worker.queue, async(message) => {
@@ -37,14 +56,19 @@ export async function initRabbit(): Promise<void> {
         await worker.work(parsed)
 
         await channel.ack(message)
+
+        signale.success(chalk`Handled message from queue {yellow ${worker.queue}}, message is acked`)
       } catch (error) {
+        signale.error(error)
+        signale.error(chalk`Error while handling message from queue {yellow ${worker.queue}}, message is nacked`)
+
         return channel.nack(message, false, false)
       }
     })
   }
 }
 
-export async function sendToQueue(queue: Queue, message: object): Promise<void> {
+export async function sendToQueue(queue: Queue, message: any): Promise<void> {
   if (!channel) {
     throw new Error('Call initRabbit first')
   }

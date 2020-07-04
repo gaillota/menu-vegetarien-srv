@@ -1,20 +1,20 @@
 import { sendToQueue } from "../rabbitmq";
 import { Queue } from "../types";
+import { parseRecipe } from './recipeParser';
 
-function hasSlug(slug): boolean {
-  return !slug;
+export const queue = Queue.RecipeFilterer
+
+function isRecipeIndexed(slug: string): boolean {
+  slug
+  return false;
 }
 
-function isRecipeNotIndexed(slug: string): boolean {
-  return !hasSlug(slug);
+export async function filterRecipe(slug: string): Promise<void> {
+  await sendToQueue(queue, slug)
 }
 
-export async function recipeFilterer(slug: string): Promise<void> {
-  if (isRecipeNotIndexed(slug)) {
-    await sendToQueue(Queue.RecipeIndexer, { slug })
+export async function work(slug: string): Promise<void> {
+  if (!isRecipeIndexed(slug)) {
+    await parseRecipe(slug)
   }
-}
-
-export async function addToRecipesQueue(slug): Promise<void> {
-  await sendToQueue(Queue.RecipeFilterer, { slug })
 }
