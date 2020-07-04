@@ -1,12 +1,12 @@
-import { sendToQueue } from "../rabbitmq";
-import { Queue } from "../types";
+import { sendToQueue } from '../rabbitmq';
+import { Queue } from '../types';
 import { parseRecipe } from './recipeParser';
-import { getKey } from "../redis";
+import { hasKey } from '../redis';
 
 export const queue = Queue.RecipeFilterer
 
 function isRecipeIndexed(slug: string): boolean {
-  return !!getKey(slug);
+  return hasKey(slug);
 }
 
 export async function filterRecipe(slug: string): Promise<void> {
