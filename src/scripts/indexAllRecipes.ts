@@ -1,13 +1,18 @@
-import getRecipes from '../resolvers/getRecipes';
-import { indexRecipes } from '../algolia/indexRecipes';
+import { getRecipesSlug } from '../recipes/getRecipesSlugs'
+import { filterRecipe } from '../workers/recipeFilterer'
 
 export async function indexAllRecipes(): Promise<void> {
-  let hasMore;
-  let currentPage = 1;
+  let hasMore
+  let currentPage = 1
+
   do {
-    const result = await getRecipes({ page: currentPage });
-    hasMore = result.hasMore;
-    currentPage++;
-    await indexRecipes(result.data);
+    const result = await getRecipesSlug({ page: currentPage })
+
+    for (const slug of result.data) {
+      await filterRecipe(slug)
+    }
+
+    hasMore = result.hasMore
+    currentPage = result.page + 1
   } while (hasMore)
 }

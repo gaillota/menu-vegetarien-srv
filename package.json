@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
   "engines": {
-    "node": ">= 12.13 <13"
+    "node": ">= 12.13"
   },
   "devDependencies": {
     "@types/algoliasearch": "^3.34.10",
     "@types/cheerio": "^0.22.18",
     "@types/commander": "^2.12.2",
     "@types/jest": "~25.2.1",
+    "@types/koa": "^2.11.3",
     "@types/node": "~12.12.38",
     "@typescript-eslint/eslint-plugin": "~2.32.0",
     "@typescript-eslint/parser": "~2.32.0",
@@ -31,21 +32,32 @@
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "start": "node build/src/main.js",
-    "start:dev": "nodemon build/src/main.js",
-    "cli": "node build/src/cli.js"
+    "start": "node build/src/index.js",
+    "start:dev": "nodemon build/src/index.js",
+    "cli": "node build/src/cli.js",
+    "docker:start": "docker-compose --file docker-compose.yml up",
+    "docker:stop": "docker-compose --file docker-compose.yml stop",
+    "docker:restart": "docker-compose --file docker-compose.yml restart",
+    "docker:logs": "docker-compose --file docker-compose.yml logs"
   },
   "author": "Jakub Synowiec <github@jakubsynowiec.info>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
+    "@koa/router": "^9.1.0",
     "algoliasearch": "^4.3.0",
-    "apollo-server": "^2.14.2",
+    "amqplib": "^0.5.6",
+    "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.3",
     "commander": "^5.1.0",
     "dotenv": "^8.2.0",
-    "graphql": "^15.0.0",
+    "glob": "^7.1.6",
+    "koa": "^2.13.0",
+    "koa-logger": "^3.2.1",
+    "redis": "^3.0.2",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
+    "signale": "^1.4.0",
     "tslib": "~1.11.2"
   }
 }
