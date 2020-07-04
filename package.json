@@ -31,17 +31,21 @@
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "start": "node build/src/main.js",
-    "start:dev": "nodemon build/src/main.js",
+    "start": "node build/src/server.js",
+    "start:dev": "nodemon build/src/server.js",
     "cli": "node build/src/cli.js"
   },
   "author": "Jakub Synowiec <github@jakubsynowiec.info>",
   "license": "Apache-2.0",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
+    "@koa/router": "^9.1.0",
     "algoliasearch": "^4.3.0",
     "cheerio": "^1.0.0-rc.3",
     "commander": "^5.1.0",
     "dotenv": "^8.2.0",
+    "koa": "^2.13.0",
+    "koa-logger": "^3.2.1",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "tslib": "~1.11.2"
