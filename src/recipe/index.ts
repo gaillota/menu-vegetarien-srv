@@ -1,10 +1,10 @@
 import { baseUrl } from '../constants';
-import { Recipe } from '../types';
-import * as request from "request-promise";
+import { Index, Recipe } from '../types';
+import * as request from 'request-promise';
 import parseRecipe from '../parsers/recipe';
 import * as signale from 'signale';
 import * as chalk from 'chalk';
-import { indices } from '../algolia';
+import { saveObjects } from '../algolia';
 
 export function buildUrl(slug: string): string {
   return `${baseUrl}/recettes/${slug}`
@@ -25,7 +25,5 @@ export async function getRecipe(slug: string): Promise<Recipe> {
 }
 
 export async function indexRecipe(recipe: Recipe): Promise<void> {
-  signale.await(chalk`Indexing recipe {yellow ${recipe.slug}}...`)
-
-  await indices.recipes.saveObjects([ { ...recipe, objectID: recipe.slug } ])
+  await saveObjects(Index.Recipes, [ { ...recipe, objectID: recipe.slug } ])
 }

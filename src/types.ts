@@ -41,3 +41,7 @@ export enum Queue {
   RecipeParser = 'recipe-parser',
   RecipeIndexer = 'recipe-indexer',
 }
+
+export enum Index {
+  Recipes = 'recipes',
+}
