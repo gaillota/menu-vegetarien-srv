@@ -10,7 +10,7 @@ client.on('error', function (error) {
   console.error('Redis error:', error)
 })
 
-export function pushData(key: string, data: unknown): void {
+export function setKey(key: string, data: unknown): void {
   client.set(key, data, redis.print)
 }
 
