@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Minimalistic boilerplate to quick-start Node.js development in TypeScript.",
   "engines": {
-    "node": ">= 12.13 <13"
+    "node": ">= 12.13"
   },
   "devDependencies": {
     "@types/algoliasearch": "^3.34.10",
@@ -39,11 +39,9 @@
   "license": "Apache-2.0",
   "dependencies": {
     "algoliasearch": "^4.3.0",
-    "apollo-server": "^2.14.2",
     "cheerio": "^1.0.0-rc.3",
     "commander": "^5.1.0",
     "dotenv": "^8.2.0",
-    "graphql": "^15.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "tslib": "~1.11.2"
