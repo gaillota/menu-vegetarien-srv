@@ -10,7 +10,7 @@ yarn
 yarn run build:watch
 
 # Start server
-yarn start
+yarn start:dev
 ```
 
 - Connect to Rabbit: http://localhost:15673/ guest:guest

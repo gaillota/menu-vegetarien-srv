@@ -38,3 +38,9 @@ export interface PaginationResult<T> {
 }
 
 export type ParsingResult<T> = Pick<PaginationResult<T>, 'data' | 'pagesCount'>;
+
+export enum Queue {
+  RecipeFilterer = 'recipe-filterer',
+  RecipeParser = 'recipe-parser',
+  RecipeIndexer = 'recipe-indexer',
+}

@@ -2,6 +2,7 @@ import * as Koa from 'koa';
 import * as Router from '@koa/router';
 import * as logger from 'koa-logger';
 import * as cors from '@koa/cors';
+import { initRabbit, initTopology } from './rabbitmq';
 
 const app = new Koa();
 const router = new Router();
@@ -30,6 +31,9 @@ app.use(logger());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`🚀  Server ready at http://localhost:${process.env.PORT || 3000}`);
-});
+Promise.all([initRabbit()]).then(() => {
+  app.listen(process.env.PORT || 3000, () => {
+    console.log(`🚀  Server ready at http://localhost:${process.env.PORT || 3000}`);
+  });
+})
+

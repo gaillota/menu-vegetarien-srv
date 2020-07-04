@@ -41,6 +41,7 @@
     "@koa/cors": "^3.1.0",
     "@koa/router": "^9.1.0",
     "algoliasearch": "^4.3.0",
+    "amqplib": "^0.5.6",
     "cheerio": "^1.0.0-rc.3",
     "commander": "^5.1.0",
     "dotenv": "^8.2.0",
