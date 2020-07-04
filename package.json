@@ -33,7 +33,11 @@
     "test:watch": "jest --watch",
     "start": "node build/src/server.js",
     "start:dev": "nodemon build/src/server.js",
-    "cli": "node build/src/cli.js"
+    "cli": "node build/src/cli.js",
+    "docker:start": "docker-compose --file docker-compose.yml up",
+    "docker:stop": "docker-compose --file docker-compose.yml stop",
+    "docker:restart": "docker-compose --file docker-compose.yml restart",
+    "docker:logs": "docker-compose --file docker-compose.yml logs"
   },
   "author": "Jakub Synowiec <github@jakubsynowiec.info>",
   "license": "Apache-2.0",
@@ -47,6 +51,7 @@
     "dotenv": "^8.2.0",
     "koa": "^2.13.0",
     "koa-logger": "^3.2.1",
+    "redis": "^3.0.2",
     "request": "^2.88.2",
     "request-promise": "^4.2.5",
     "tslib": "~1.11.2"
