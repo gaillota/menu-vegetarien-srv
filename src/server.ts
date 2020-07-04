@@ -1,11 +1,9 @@
-import { initAlgolia } from './algolia';
-
-require('dotenv').config()
 import * as https from 'http'
 import * as signale from 'signale'
 import { initHttp } from './http'
 import { initRabbit } from './rabbitmq'
 import { initRedis } from './redis'
+import { initAlgolia } from './algolia';
 
 Promise.all([initHttp(), initRabbit(), initRedis(), initAlgolia()])
   .then(([app]) => {
