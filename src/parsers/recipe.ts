@@ -1,7 +1,6 @@
 import * as cheerio from 'cheerio'
 
 import { Recipe } from '../types'
-import { slugRegex } from '../constants'
 
 const TITLE_SELECTOR = 'div.blog-main > h1'
 const DESCRIPTION_SELECTOR = 'span.wpurp-recipe-description'
@@ -19,7 +18,7 @@ const INSTRUCTIONS_ITEM_SELECTOR =
   'ol.wpurp-recipe-instruction-container li.wpurp-recipe-instruction'
 const INSTRUCTIONS_TEXT_SELECTOR = 'span.wpurp-recipe-instruction-text'
 
-function parseRecipe(html, url): Recipe {
+function parseRecipe(html): Recipe {
   const $ = cheerio.load(html)
   const title = $(TITLE_SELECTOR).text()
   const description = $(DESCRIPTION_SELECTOR).text()
@@ -70,11 +69,10 @@ function parseRecipe(html, url): Recipe {
 
     instructions.push(text)
   })
-  const [, slug] = slugRegex.exec(url) || []
 
   return {
     title,
-    slug,
+    slug: null,
     description,
     photoUrl,
     preparationTime,

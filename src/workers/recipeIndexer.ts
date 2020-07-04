@@ -1,13 +1,13 @@
-import getRecipe from '../resolvers/getRecipe'
-import { indexRecipes } from '../algolia/indexRecipes'
-import { setKey } from "../redis";
-import { Queue } from '../types';
+import { Queue, Recipe } from '../types';
+import { sendToQueue } from '../rabbitmq';
+import { indexRecipe as indexRecipeAlgolia } from '../recipe';
 
 export const queue = Queue.RecipeIndexer
-export const work = Queue.RecipeIndexer
 
-export async function recipeIndexer({ slug, url }): Promise<void> {
-  const recipe = await getRecipe({ url })
-  await indexRecipes([recipe])
-  await setKey(slug, true)
+export async function indexRecipe(recipe: Recipe): Promise<void> {
+  await sendToQueue(queue, recipe)
+}
+
+export async function work(recipe: Recipe): Promise<void> {
+  await indexRecipeAlgolia(recipe)
 }

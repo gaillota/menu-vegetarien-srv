@@ -49,6 +49,7 @@ export async function initRabbit(): Promise<void> {
 
   for (const worker of workers) {
     await channel.consume(worker.queue, async(message) => {
+      signale.await(chalk`Handling message from queue {yellow ${worker.queue}}...`)
       try {
         const content = message.content.toString()
         const parsed = JSON.parse(content)
