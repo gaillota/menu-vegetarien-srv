@@ -15,22 +15,40 @@ export async function initRedis(): Promise<void> {
   })
 }
 
-export function setKey(key: string, data: unknown): void {
+export function setKey(key: string, data: unknown): Promise<void> {
   if (!client) {
     throw new Error('Call initRedis first')
   }
 
-  client.set(key, data, redis.print)
+  return new Promise((resolve, reject) => {
+    client.set(key, data, (err) => {
+      if (err) {
+        reject(err)
+      }
+
+      resolve()
+    })
+  })
 }
 
-export function getKey(key: string): string {
+export function getKey(key: string): Promise<string> {
   if (!client) {
     throw new Error('Call initRedis first')
   }
 
-  return client.get(key, redis.print)
+  return new Promise((resolve, reject) => {
+    client.get(key, (err, data) => {
+      if (err) {
+        reject(err)
+      }
+
+      resolve(data)
+    })
+  })
 }
 
-export function hasKey(key: string): boolean {
-  return !!getKey(key)
+export async function hasKey(key: string): Promise<boolean> {
+  const value = await getKey(key)
+
+  return !!value
 }
