@@ -1,6 +1,6 @@
 import { Queue, Recipe } from '../types';
 import { sendToQueue } from '../rabbitmq';
-import { indexRecipe as indexRecipeAlgolia } from '../recipe';
+import { indexRecipe as indexRecipeAlgolia } from '../recipes/recipe';
 
 export const queue = Queue.RecipeIndexer
 
