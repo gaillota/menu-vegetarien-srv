@@ -1,15 +1,11 @@
-import * as request from 'request-promise';
+import * as request from "request-promise";
 
-import parseRecipe from '../parsers/recipe';
-import { Recipe } from '../types';
-import { indexRecipes } from '../algolia/indexRecipes';
+import parseRecipe from "../parsers/recipe";
+import { Recipe } from "../types";
 
 async function getRecipe({ url }): Promise<Recipe> {
   const result = await request.get(url);
-  const recipe = parseRecipe(result, url);
-  await indexRecipes([recipe]);
-
-  return recipe;
+  return parseRecipe(result, url);
 }
 
 export default getRecipe;

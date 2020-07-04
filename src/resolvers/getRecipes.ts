@@ -2,7 +2,7 @@ import * as request from 'request-promise';
 
 import parseRecipesList from '../parsers/recipes';
 import { baseUrl } from '../constants';
-import { PaginationResult, Recipe } from '../types';
+import { PaginationResult } from '../types';
 
 function getPaginationUrl({ keywords, page }): string {
   if (keywords) {
@@ -12,7 +12,7 @@ function getPaginationUrl({ keywords, page }): string {
 }
 
 async function getRecipes({ keywords = '', page = 1 } = {}): Promise<
-  PaginationResult<Recipe>
+  PaginationResult<string>
 > {
   const url = getPaginationUrl({ keywords, page });
   const result = await request.get(url);
