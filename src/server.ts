@@ -3,8 +3,9 @@ import * as Koa from 'koa';
 import * as Router from '@koa/router';
 import * as logger from 'koa-logger';
 import * as cors from '@koa/cors';
-import { initRabbit } from './rabbitmq';
 import * as signale from 'signale';
+import { initRabbit } from './rabbitmq';
+import { initRedis } from "./redis";
 
 const app = new Koa()
 const router = new Router()
@@ -33,7 +34,7 @@ app.use(logger())
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-Promise.all([initRabbit()])
+Promise.all([initRabbit(), initRedis()])
   .then(() => {
     app.listen(process.env.PORT || 3000, () => {
       signale.success(`🚀  Server ready at http://localhost:${process.env.PORT || 3000}`);
