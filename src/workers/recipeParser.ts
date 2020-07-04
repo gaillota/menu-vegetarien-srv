@@ -11,5 +11,5 @@ export async function parseRecipe(slug: string): Promise<void> {
 
 export async function work(slug: string): Promise<void> {
   const recipe = await getRecipe(slug)
-  // await indexRecipe(recipe)
+  await indexRecipe(recipe)
 }

@@ -8,5 +8,9 @@ const signale = new Signale({ scope: 'api' })
 export async function api(path: string): Promise<string> {
   signale.await(chalk`Fetching {yellow ${path}}...`)
 
-  return request.get(`${baseUrl}${path}`)
+  try {
+    return await request.get(`${baseUrl}${path}`);
+  } catch (error) {
+    throw new Error(chalk`Could not fetch {yellow ${path}}`)
+  }
 }
