@@ -8,6 +8,7 @@
   "devDependencies": {
     "@types/algoliasearch": "^3.34.10",
     "@types/cheerio": "^0.22.18",
+    "@types/commander": "^2.12.2",
     "@types/jest": "~25.2.1",
     "@types/node": "~12.12.38",
     "@typescript-eslint/eslint-plugin": "~2.32.0",
@@ -31,7 +32,8 @@
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "start": "node build/src/main.js",
-    "start:dev": "nodemon build/src/main.js"
+    "start:dev": "nodemon build/src/main.js",
+    "cli": "node build/src/cli.js"
   },
   "author": "Jakub Synowiec <github@jakubsynowiec.info>",
   "license": "Apache-2.0",
@@ -39,6 +41,7 @@
     "algoliasearch": "^4.3.0",
     "apollo-server": "^2.14.2",
     "cheerio": "^1.0.0-rc.3",
+    "commander": "^5.1.0",
     "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
     "request": "^2.88.2",

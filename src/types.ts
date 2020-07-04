@@ -1,6 +1,8 @@
 export interface Recipe {
+  id: string;
   type?: string;
   title: string;
+  slug: string;
   description: string;
   photoUrl: string;
   url?: string;

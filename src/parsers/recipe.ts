@@ -1,6 +1,8 @@
 import * as cheerio from 'cheerio';
 
 import { Recipe } from '../types';
+import sha256 from '../utils/sha256';
+import { slugRegex } from "../constants";
 
 const TITLE_SELECTOR = 'div.blog-main > h1';
 const DESCRIPTION_SELECTOR = 'span.wpurp-recipe-description';
@@ -19,7 +21,7 @@ const INSTRUCTIONS_ITEM_SELECTOR =
   'ol.wpurp-recipe-instruction-container li.wpurp-recipe-instruction';
 const INSTRUCTIONS_TEXT_SELECTOR = 'span.wpurp-recipe-instruction-text';
 
-function parseRecipe(html): Recipe {
+function parseRecipe(html, url): Recipe {
   const $ = cheerio.load(html);
   const title = $(TITLE_SELECTOR).text();
   const description = $(DESCRIPTION_SELECTOR).text();
@@ -70,9 +72,13 @@ function parseRecipe(html): Recipe {
 
     instructions.push(text);
   });
+  const id = sha256(title);
+  const [, slug] = slugRegex.exec(url) || []
 
   return {
+    id,
     title,
+    slug,
     description,
     photoUrl,
     preparationTime,
