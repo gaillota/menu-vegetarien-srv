@@ -1,4 +1,4 @@
-import { getRecipesSlug } from '../recipes/getRecipesSlugs'
+import { getRecipesSlugs } from '../recipes/getRecipesSlugs'
 import { filterRecipe } from '../workers/recipeFilterer'
 
 export async function indexAllRecipes(): Promise<void> {
@@ -6,7 +6,7 @@ export async function indexAllRecipes(): Promise<void> {
   let currentPage = 1
 
   do {
-    const result = await getRecipesSlug({ page: currentPage })
+    const result = await getRecipesSlugs({ page: currentPage })
 
     for (const slug of result.data) {
       await filterRecipe(slug)
