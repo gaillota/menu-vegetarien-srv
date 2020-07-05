@@ -1,5 +1,5 @@
 import * as Router from '@koa/router'
-import { Context } from "koa";
+import { Context } from 'koa'
 import { indexAllRecipes } from '../scripts/indexAllRecipes'
 
 const router = new Router()
