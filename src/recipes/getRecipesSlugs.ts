@@ -8,7 +8,7 @@ function buildUrl({ page }): string {
   return `${baseUrl}/recettes${page > 1 ? `/page/${page}` : ''}`
 }
 
-export async function getRecipesSlug({ page = 1 } = {}): Promise<
+export async function getRecipesSlugs({ page = 1 } = {}): Promise<
   PaginationResult<string>
 > {
   const url = buildUrl({ page })
