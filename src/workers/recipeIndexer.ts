@@ -1,6 +1,7 @@
-import { Index, Queue, Recipe } from '../types';
-import { sendToQueue } from '../rabbitmq';
-import { saveObjects } from '../algolia';
+import { Index, Queue, Recipe } from '../types'
+import { sendToQueue } from '../rabbitmq'
+import { saveObjects } from '../algolia'
+import { setKey } from '../redis'
 
 export const queue = Queue.RecipeIndexer
 
@@ -9,5 +10,6 @@ export async function indexRecipe(recipe: Recipe): Promise<void> {
 }
 
 export async function work(recipe: Recipe): Promise<void> {
-  await saveObjects(Index.Recipes, [ { ...recipe, objectID: recipe.slug } ])
+  await saveObjects(Index.Recipes, [{ ...recipe, objectID: recipe.slug }])
+  await setKey(recipe.slug, true)
 }

@@ -1,7 +1,10 @@
 import * as redis from 'redis'
+import * as chalk from 'chalk'
+import { Signale } from 'signale'
 
 import { REDIS_URL } from '../env'
 
+const signale = new Signale({ scope: 'redis' })
 let client = null
 
 export async function initRedis(): Promise<void> {
@@ -19,6 +22,10 @@ export function setKey(key: string, data: unknown): Promise<void> {
   if (!client) {
     throw new Error('Call initRedis first')
   }
+
+  signale.await(
+    chalk`Saving {yellow "${key}: ${JSON.stringify(data)}"} in datastore...`,
+  )
 
   return new Promise((resolve, reject) => {
     client.set(key, data, (err) => {
