@@ -21,7 +21,7 @@ export async function initAlgolia(): Promise<void> {
   }
 }
 
-export async function saveObjects(index: string, objects: any[]): Promise<void> {
+export async function saveObjects(index: string, objects: unknown[]): Promise<void> {
   signale.await(chalk`Indexing {yellow ${objects.length}} objects in index {yellow ${index}}...`)
 
   await indices[index].saveObjects(objects).wait()
