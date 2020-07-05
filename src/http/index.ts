@@ -1,6 +1,6 @@
-import * as Koa from 'koa';
-import * as logger from 'koa-logger';
-import * as cors from '@koa/cors';
+import * as Koa from 'koa'
+import * as logger from 'koa-logger'
+import * as cors from '@koa/cors'
 import router from './router'
 
 export async function initHttp(): Promise<Koa> {
