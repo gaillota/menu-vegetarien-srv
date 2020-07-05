@@ -5,7 +5,7 @@ import { hasKey } from '../redis';
 
 export const queue = Queue.RecipeFilterer
 
-function isRecipeIndexed(slug: string): boolean {
+function isRecipeIndexed(slug: string): Promise<boolean> {
   return hasKey(slug);
 }
 
@@ -14,7 +14,7 @@ export async function filterRecipe(slug: string): Promise<void> {
 }
 
 export async function work(slug: string): Promise<void> {
-  if (!isRecipeIndexed(slug)) {
+  if (!await isRecipeIndexed(slug)) {
     await parseRecipe(slug)
   }
 }

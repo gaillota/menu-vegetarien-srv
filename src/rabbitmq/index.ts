@@ -69,7 +69,7 @@ export async function initRabbit(): Promise<void> {
   }
 }
 
-export async function sendToQueue(queue: Queue, message: any): Promise<void> {
+export async function sendToQueue(queue: Queue, message: unknown): Promise<void> {
   if (!channel) {
     throw new Error('Call initRabbit first')
   }
