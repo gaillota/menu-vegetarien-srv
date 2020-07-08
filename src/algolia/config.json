@@ -1,17 +1,14 @@
 {
   "indices": {
     "recipes": {
-      "searchableAttributes": [
-        "title",
-        "description",
-        "ingredients"
-      ],
+      "searchableAttributes": ["title", "description", "ingredients"],
       "attributesForFaceting": [
         "filterOnly(slug)",
         "filterOnly(preparationTime)",
         "filterOnly(cookingTime)",
         "filterOnly(createdAt)"
-      ]
+      ],
+      "replicas": ["recipes_date_desc"]
     }
   }
 }
