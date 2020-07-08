@@ -1,7 +1,7 @@
 import { sendToQueue } from '../rabbitmq'
 import { Queue } from '../types'
 import { indexRecipe } from './recipeIndexer'
-import { getRecipe } from '../recipes/recipe'
+import { getRecipe } from '../recipes/getRecipe'
 
 export const queue = Queue.RecipeParser
 

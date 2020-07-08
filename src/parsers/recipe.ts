@@ -24,6 +24,7 @@ function parseRecipe(html): Recipe {
   const description = $(DESCRIPTION_SELECTOR).text()
   const photoUrl = $(PHOTO_SELECTOR).attr('src')
   const createdAt = $(CREATED_AT_SELECTOR).attr('datetime')
+  const createdAtTimestamp = new Date(createdAt).getTime() / 1000
   const preparationTime = Number($(PREPARATION_TIME_SELECTOR).first().text())
   const cookingTime = Number($(COOKING_TIME_SELECTOR).first().text())
   const servings = Number($(SERVINGS_SELECTOR).val())
@@ -72,7 +73,6 @@ function parseRecipe(html): Recipe {
 
   return {
     title,
-    slug: null,
     description,
     photoUrl,
     preparationTime,
@@ -82,6 +82,8 @@ function parseRecipe(html): Recipe {
     otherIngredients,
     instructions,
     createdAt,
+    createdAtTimestamp,
+    slug: null,
   }
 }
 

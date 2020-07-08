@@ -1,13 +1,9 @@
 import { sendToQueue } from '../rabbitmq'
 import { Queue } from '../types'
 import { parseRecipe } from './recipeParser'
-import { hasKey } from '../redis'
+import { isRecipeIndexed } from "../recipes/utils";
 
 export const queue = Queue.RecipeFilterer
-
-function isRecipeIndexed(slug: string): Promise<boolean> {
-  return hasKey(slug)
-}
 
 export async function filterRecipe(slug: string): Promise<void> {
   await sendToQueue(queue, slug)

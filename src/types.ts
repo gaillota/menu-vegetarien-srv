@@ -10,6 +10,7 @@ export interface Recipe {
   otherIngredients: Array<string>
   instructions: Array<string>
   createdAt: string
+  createdAtTimestamp: number
 }
 
 export interface DailyMenu {
