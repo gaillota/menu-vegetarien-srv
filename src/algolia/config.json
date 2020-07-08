@@ -6,9 +6,23 @@
         "filterOnly(slug)",
         "filterOnly(preparationTime)",
         "filterOnly(cookingTime)",
-        "filterOnly(createdAt)"
+        "filterOnly(createdAt)",
+        "filterOnly(createdAtTimestamp)"
       ],
       "replicas": ["recipes_date_desc"]
+    },
+    "recipes_date_desc": {
+      "ranking": [
+        "desc(createdAtTimestamp)",
+        "typo",
+        "geo",
+        "words",
+        "filters",
+        "proximity",
+        "attribute",
+        "exact",
+        "custom"
+      ]
     }
   }
 }
