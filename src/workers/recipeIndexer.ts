@@ -5,7 +5,7 @@ import { setKey } from '../redis'
 
 export const queue = Queue.RecipeIndexer
 
-export async function indexRecipe(recipe: Recipe): Promise<void> {
+export async function sendToRecipeIndexer(recipe: Recipe): Promise<void> {
   await sendToQueue(queue, recipe)
 }
 

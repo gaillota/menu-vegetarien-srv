@@ -1,5 +1,5 @@
 import { getRecipesSlugs } from '../recipes/getRecipesSlugs'
-import { parseRecipe } from "../workers/recipeParser";
+import { sendToRecipeParser } from "../workers/recipeParser";
 import { isRecipeAlreadyIndexed } from "../recipes/utils";
 
 export async function indexNewRecipes(): Promise<void> {
@@ -11,7 +11,7 @@ export async function indexNewRecipes(): Promise<void> {
 
     for (const slug of result.data) {
       if (!(await isRecipeAlreadyIndexed(slug))) {
-        await parseRecipe(slug)
+        await sendToRecipeParser(slug)
       }
     }
 
