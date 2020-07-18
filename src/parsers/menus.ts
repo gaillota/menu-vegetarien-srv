@@ -1,21 +1,19 @@
 import * as cheerio from 'cheerio'
 
-import { pageLabelRegex, recipeSlugRegex } from '../constants'
-import { PaginationResult } from '../types'
+import { menuSlugRegex, pageLabelRegex } from "../constants";
+import { ParsingResult } from '../types'
 
-function parseRecipesList(
-  html,
-): Pick<PaginationResult<string>, 'data' | 'pagesCount'> {
+function parseMenus(html): ParsingResult<string> {
   const $ = cheerio.load(html)
 
   const slugs = []
 
   $('div.elementor-posts article').each((_, element) => {
-    const $recipe = $(element)
-    const url = $recipe
+    const $menu = $(element)
+    const url = $menu
       .find('div.elementor-post__text > a.elementor-post__read-more')
       .attr('href')
-    const [, slug] = recipeSlugRegex.exec(url) || []
+    const [, slug] = menuSlugRegex.exec(url) || []
 
     slugs.push(slug)
   })
@@ -29,4 +27,4 @@ function parseRecipesList(
   return { data: slugs, pagesCount: Number(pagesCountText) }
 }
 
-export default parseRecipesList
+export default parseMenus

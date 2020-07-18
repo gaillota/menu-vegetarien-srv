@@ -11,6 +11,7 @@ export async function api(path: string): Promise<string> {
   try {
     return await request.get(`${baseUrl}${path}`)
   } catch (error) {
-    throw new Error(chalk`Could not fetch {yellow ${path}}`)
+    signale.error(chalk`Could not fetch {yellow ${path}}`)
+    throw new Error(error)
   }
 }

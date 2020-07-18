@@ -23,6 +23,9 @@
         "exact",
         "custom"
       ]
+    },
+    "menus": {
+      "searchableAttributes": ["title", "description"]
     }
   }
 }

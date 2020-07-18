@@ -14,13 +14,14 @@ export interface Recipe {
 }
 
 export interface DailyMenu {
-  title: string
-  photoUrl: string
-  url: string
+  starter: Recipe
+  dish: Recipe
+  dessert: Recipe
 }
 
 export interface WeeklyMenu {
   title: string
+  slug: string
   description: string
   photoUrl: string
   url?: string
@@ -41,8 +42,11 @@ export enum Queue {
   RecipeFilterer = 'recipe-filterer',
   RecipeParser = 'recipe-parser',
   RecipeIndexer = 'recipe-indexer',
+  MenuParser = 'menu-parser',
+  MenuIndexer = 'menu-indexer',
 }
 
 export enum Index {
   Recipes = 'recipes',
+  Menus = 'menus',
 }

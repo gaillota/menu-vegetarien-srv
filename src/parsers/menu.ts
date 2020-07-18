@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio'
-import { dateRegex } from '../constants'
+import { dateRegex, recipeSlugRegex } from '../constants'
 import { WeeklyMenu } from '../types'
 
 const menuIndexes = [2, 4, 7, 9, 11]
@@ -26,17 +26,12 @@ function parseMenu(html): WeeklyMenu {
 
       $menu.find('div.elementor-col-33').each((index, element) => {
         const $meal = $(element)
-        const photoUrl = $meal
-          .find('div.elementor-widget-image img')
-          .attr('src')
         const $link = $meal.find('div.elementor-widget-text-editor a')
-        const title = $link.text()
         const url = $link.attr('href')
+        const [, slug] = recipeSlugRegex.exec(url) || []
 
         menu[indexToMeal[index]] = {
-          title,
-          photoUrl,
-          url,
+          slug,
         }
       })
 
@@ -50,6 +45,7 @@ function parseMenu(html): WeeklyMenu {
     photoUrl,
     date,
     dailyMenus,
+    slug: null,
   }
 }
 

@@ -31,3 +31,11 @@ export async function saveObjects(
 
   await indices[index].saveObjects(objects).wait()
 }
+
+export async function getObjectById(index: string, id: string): Promise<object> {
+  signale.await(
+    chalk`Getting object {yellow ${id}} from index {yellow ${index}}...`,
+  )
+
+  return indices[index].getObject(id)
+}
