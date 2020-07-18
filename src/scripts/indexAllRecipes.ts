@@ -1,6 +1,6 @@
 import { getRecipesSlugs } from '../recipes/getRecipesSlugs'
 import { parseRecipe } from "../workers/recipeParser";
-import { isRecipeIndexed } from "../recipes/utils";
+import { isRecipeAlreadyIndexed } from "../recipes/utils";
 
 export async function indexAllRecipes(): Promise<void> {
   let hasMore
@@ -10,7 +10,7 @@ export async function indexAllRecipes(): Promise<void> {
     const result = await getRecipesSlugs({ page: currentPage })
 
     for (const slug of result.data) {
-      if (!(await isRecipeIndexed(slug))) {
+      if (!(await isRecipeAlreadyIndexed(slug))) {
         await parseRecipe(slug)
       }
     }

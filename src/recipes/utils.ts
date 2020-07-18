@@ -1,5 +1,5 @@
 import { hasKey } from "../redis";
 
-export async function isRecipeIndexed(slug: string): Promise<boolean> {
+export async function isRecipeAlreadyIndexed(slug: string): Promise<boolean> {
   return hasKey(slug)
 }
