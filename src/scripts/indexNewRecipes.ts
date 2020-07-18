@@ -2,7 +2,7 @@ import { getRecipesSlugs } from '../recipes/getRecipesSlugs'
 import { parseRecipe } from "../workers/recipeParser";
 import { isRecipeAlreadyIndexed } from "../recipes/utils";
 
-export async function indexAllRecipes(): Promise<void> {
+export async function indexNewRecipes(): Promise<void> {
   let hasMore
   let currentPage = 1
 

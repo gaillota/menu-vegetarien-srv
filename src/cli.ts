@@ -3,7 +3,7 @@ import { program } from 'commander'
 import { initRabbit } from './rabbitmq'
 import { initRedis } from './redis'
 import { initAlgolia } from './algolia'
-import { indexAllRecipes } from './scripts/indexAllRecipes'
+import { indexNewRecipes } from './scripts/indexNewRecipes'
 import { updateRecipesDates } from './scripts/updateRecipesDates'
 
 program
@@ -11,7 +11,7 @@ program
   .description('parses and indexes all recipes')
   .action(async () => {
     await Promise.all([initRabbit(), initRedis(), initAlgolia()])
-    await indexAllRecipes()
+    await indexNewRecipes()
   })
 
 program
