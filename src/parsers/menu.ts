@@ -3,11 +3,6 @@ import { dateRegex, recipeSlugRegex } from '../constants'
 import { WeeklyMenu } from '../types'
 
 const menuIndexes = [2, 4, 7, 9, 11]
-const indexToMeal = {
-  0: 'starter',
-  1: 'dish',
-  2: 'dessert',
-}
 
 function parseMenu(html): WeeklyMenu {
   const $ = cheerio.load(html)
@@ -22,17 +17,31 @@ function parseMenu(html): WeeklyMenu {
   $('div.elementor-section-wrap > section').each((index, element) => {
     if (menuIndexes.includes(index)) {
       const $menu = $(element)
-      const menu = {}
+      const menu = []
 
-      $menu.find('div.elementor-col-33').each((index, element) => {
+      $menu.find('div.elementor-col-33').each((_, element) => {
         const $meal = $(element)
-        const $link = $meal.find('div.elementor-widget-text-editor a')
+        const photoUrl = $meal
+          .find('div.elementor-widget-image img')
+          .attr('src')
+        const $link = $meal.find('div.elementor-text-editor a')
+        const title = $link.text()
         const url = $link.attr('href')
         const [, slug] = recipeSlugRegex.exec(url) || []
-
-        menu[indexToMeal[index]] = {
+        const recipe = {
+          title,
           slug,
+          photoUrl,
+          url,
         }
+
+        // an apple a day keeps the doctor away
+        if (!recipe.title) {
+          const $link = $meal.find('div.elementor-text-editor > div')
+          recipe.title = $link.text()
+        }
+
+        menu.push(recipe)
       })
 
       dailyMenus.push(menu)

@@ -13,12 +13,6 @@ export interface Recipe {
   createdAtTimestamp: number
 }
 
-export interface DailyMenu {
-  starter: Recipe
-  dish: Recipe
-  dessert: Recipe
-}
-
 export interface WeeklyMenu {
   title: string
   slug: string
@@ -26,7 +20,7 @@ export interface WeeklyMenu {
   photoUrl: string
   url?: string
   date: string
-  dailyMenus: Array<DailyMenu>
+  dailyMenus: Array<Array<Recipe>>
 }
 
 export interface PaginationResult<T> {
