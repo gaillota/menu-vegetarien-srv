@@ -7,8 +7,6 @@ async function getMenu(slug): Promise<WeeklyMenu> {
   const result = await api(`/${slug}`)
   const menu = parseMenu(result)
 
-  console.log(JSON.stringify(menu, null, 2))
-
   for (const dailyMenu of menu.dailyMenus) {
     await Promise.all(
       dailyMenu.map(({ slug }) => {
