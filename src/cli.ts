@@ -6,6 +6,7 @@ import { initAlgolia } from './algolia'
 import { indexNewRecipes } from './scripts/indexNewRecipes'
 import { indexNewMenus } from "./scripts/indexNewMenus";
 import { updateRecipesDates } from './scripts/updateRecipesDates'
+import { updateMenusDates } from "./scripts/updateMenusDates";
 
 program
   .command('indexAllRecipes')
@@ -18,7 +19,7 @@ program
 program
   .command('updateRecipesDates')
   .description(
-    'update every recipes record and add a timestamp based on createdAt field',
+    'update every recipe object and add a timestamp based on createdAt field',
   )
   .action(async () => {
     await updateRecipesDates()
@@ -30,6 +31,15 @@ program
   .action(async () => {
     await Promise.all([initRabbit(), initRedis(), initAlgolia()])
     await indexNewMenus()
+  })
+
+program
+  .command('updateMenusDates')
+  .description(
+    'update every menu object and add a timestamp based on date field',
+  )
+  .action(async () => {
+    await updateMenusDates()
   })
 
 program.parse(process.argv)

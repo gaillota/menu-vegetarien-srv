@@ -19,7 +19,11 @@ const translatedMonths = [
   ['december', 'décembre'],
 ]
 
-export function translateDateString(date: string): string {
+export function translateDateString(date?: string): string | void {
+  if (!date) {
+    return
+  }
+
   let translatedDate = date
 
   translatedMonths.forEach(([month, translatedMonth]) => {

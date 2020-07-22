@@ -9,7 +9,7 @@ export async function getRecipe(slug: string): Promise<Recipe> {
   const createdAtTimestamp = dateToTimestamp(recipe.createdAt)
 
   recipe.slug = slug
-  recipe.createdAtTimestamp = createdAtTimestamp
+  recipe.createdAtTimestamp = createdAtTimestamp as number
 
   return recipe
 }
