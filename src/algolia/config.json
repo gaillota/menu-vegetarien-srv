@@ -25,7 +25,21 @@
       ]
     },
     "menus": {
-      "searchableAttributes": ["title", "description"]
+      "searchableAttributes": ["title", "description", "date"],
+      "replicas": ["menus_date_desc"]
+    },
+    "menus_date_desc": {
+      "ranking": [
+        "desc(dateTimestamp)",
+        "typo",
+        "geo",
+        "words",
+        "filters",
+        "proximity",
+        "attribute",
+        "exact",
+        "custom"
+      ]
     }
   }
 }
