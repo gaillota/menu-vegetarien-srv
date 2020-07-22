@@ -20,6 +20,7 @@ export interface WeeklyMenu {
   photoUrl: string
   url?: string
   date: string
+  dateTimestamp: number
   dailyMenus: Array<Array<Recipe>>
 }
 

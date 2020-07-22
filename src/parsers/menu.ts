@@ -55,6 +55,7 @@ function parseMenu(html): WeeklyMenu {
     date,
     dailyMenus,
     slug: null,
+    dateTimestamp: null,
   }
 }
 
