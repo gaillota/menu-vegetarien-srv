@@ -18,7 +18,7 @@ const INSTRUCTIONS_ITEM_SELECTOR =
   'ol.wpurp-recipe-instruction-container li.wpurp-recipe-instruction'
 const INSTRUCTIONS_TEXT_SELECTOR = 'span.wpurp-recipe-instruction-text'
 
-function parseRecipe(html): Recipe {
+function parseRecipe(html: string): Recipe {
   const $ = cheerio.load(html)
   const title = $(TITLE_SELECTOR).text()
   const description = $(DESCRIPTION_SELECTOR).text()
@@ -45,6 +45,8 @@ function parseRecipe(html): Recipe {
         .children(INGREDIENTS_LIST_ITEM_SELECTOR)
         .each((_, element) => {
           const ingredient = $(element).text()
+
+
 
           currentIngredients.push(ingredient)
         })

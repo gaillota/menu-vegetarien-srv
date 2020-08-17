@@ -4,7 +4,7 @@ import { WeeklyMenu } from '../types'
 
 const menuIndexes = [2, 4, 7, 9, 11]
 
-function parseMenu(html): WeeklyMenu {
+function parseMenu(html: string): WeeklyMenu {
   const $ = cheerio.load(html)
   const title = $('div.blog-main > h1').text()
   const description = $('div.elementor-text-editor p').eq(1).text()

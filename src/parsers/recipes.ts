@@ -4,7 +4,7 @@ import { pageLabelRegex, recipeSlugRegex } from '../constants'
 import { PaginationResult } from '../types'
 
 function parseRecipesList(
-  html,
+  html: string,
 ): Pick<PaginationResult<string>, 'data' | 'pagesCount'> {
   const $ = cheerio.load(html)
 

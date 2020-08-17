@@ -3,7 +3,7 @@ import * as cheerio from 'cheerio'
 import { menuSlugRegex, pageLabelRegex } from "../constants";
 import { ParsingResult } from '../types'
 
-function parseMenus(html): ParsingResult<string> {
+function parseMenus(html: string): ParsingResult<string> {
   const $ = cheerio.load(html)
 
   const slugs = []
