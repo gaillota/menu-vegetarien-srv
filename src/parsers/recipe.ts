@@ -46,8 +46,6 @@ function parseRecipe(html: string): Recipe {
         .each((_, element) => {
           const ingredient = $(element).text()
 
-
-
           currentIngredients.push(ingredient)
         })
 
