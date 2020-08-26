@@ -11,8 +11,8 @@ export interface Recipe {
   preparationTime: number
   cookingTime: number
   servings: number
-  ingredients: Array<string>
-  otherIngredients: Array<string>
+  ingredients: Array<Ingredient>
+  otherIngredients: Array<Ingredient>
   instructions: Array<string>
   createdAt: string
   createdAtTimestamp: number
