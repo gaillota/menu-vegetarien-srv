@@ -1,3 +1,8 @@
+export interface Ingredient {
+  quantity?: number
+  label: string
+}
+
 export interface Recipe {
   title: string
   slug: string
