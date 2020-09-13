@@ -7,7 +7,7 @@ docker-compose up -d
 yarn
 
 # Build and watch
-yarn run build:watch
+yarn build:watch
 
 # Start server
 yarn start:dev
