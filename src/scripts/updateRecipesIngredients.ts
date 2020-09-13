@@ -1,11 +1,13 @@
 import algoliasearch from 'algoliasearch'
 import { ALGOLIA_API_KEY, ALGOLIA_APP_ID } from '../env'
-import parseIngredient from '../parsers/ingredient'
+import { parseIngredients } from '../parsers/ingredients'
 
 const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
 const recipesIndex = client.initIndex('recipes')
 
-export async function updateRecipesIngredients(): Promise<void> {
+export const description = 'update recipe ingredients with better parsing'
+
+export async function main(): Promise<void> {
   let hits = []
 
   return recipesIndex
@@ -18,8 +20,8 @@ export async function updateRecipesIngredients(): Promise<void> {
     .then(() => {
       hits = hits.map((hit) => ({
         ...hit,
-        ingredients: parseIngredient(hit.ingredients),
-        otherIngredients: parseIngredient(hit.otherIngredients),
+        ingredients: parseIngredients(hit.ingredients),
+        otherIngredients: parseIngredients(hit.otherIngredients),
       }))
     })
     .then(async () => {

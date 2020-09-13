@@ -1,8 +1,10 @@
-import getMenusSlugs from "../menus/getMenusSlugs";
-import { isMenuAlreadyIndexed } from "../menus/utils";
-import { sendToMenuParser } from "../workers/menuParser";
+import getMenusSlugs from '../menus/getMenusSlugs'
+import { isMenuAlreadyIndexed } from '../menus/utils'
+import { sendToMenuParser } from '../workers/menuParser'
 
-export async function indexNewMenus(): Promise<void> {
+export const description = 'parses and indexes all new menus and their recipes'
+
+export async function main(): Promise<void> {
   let hasMore
   let currentPage = 1
 

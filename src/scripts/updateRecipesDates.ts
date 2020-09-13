@@ -4,7 +4,10 @@ import { ALGOLIA_API_KEY, ALGOLIA_APP_ID } from '../env'
 const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
 const recipesIndex = client.initIndex('recipes')
 
-export async function updateRecipesDates(): Promise<void> {
+export const description =
+  'update every recipe object and add a timestamp based on createdAt field'
+
+export async function main(): Promise<void> {
   let hits = []
 
   return recipesIndex

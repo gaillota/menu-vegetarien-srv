@@ -1,8 +1,10 @@
 import { getRecipesSlugs } from '../recipes/getRecipesSlugs'
-import { sendToRecipeParser } from "../workers/recipeParser";
-import { isRecipeAlreadyIndexed } from "../recipes/utils";
+import { sendToRecipeParser } from '../workers/recipeParser'
+import { isRecipeAlreadyIndexed } from '../recipes/utils'
 
-export async function indexNewRecipes(): Promise<void> {
+export const description = 'parses and indexes all new recipes'
+
+export async function main(): Promise<void> {
   let hasMore
   let currentPage = 1
 

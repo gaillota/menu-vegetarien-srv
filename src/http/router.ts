@@ -1,7 +1,7 @@
 import * as Router from '@koa/router'
 import { Context } from 'koa'
-import { indexNewRecipes } from '../scripts/indexNewRecipes'
-import { indexNewMenus } from '../scripts/indexNewMenus'
+import { main as indexNewRecipes } from '../scripts/indexNewRecipes'
+import { main as indexNewMenus } from '../scripts/indexNewMenus'
 
 const router = new Router()
 

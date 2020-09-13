@@ -1,60 +1,56 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config()
+import * as globCb from 'glob'
+import * as path from 'path'
+import * as util from 'util'
+import * as chalk from 'chalk'
+import { Signale } from 'signale'
 import { program } from 'commander'
 import { initRabbit } from './rabbitmq'
 import { initRedis } from './redis'
 import { initAlgolia } from './algolia'
-import { indexNewRecipes } from './scripts/indexNewRecipes'
-import { indexNewMenus } from "./scripts/indexNewMenus";
-import { updateRecipesDates } from './scripts/updateRecipesDates'
-import { updateMenusDates } from "./scripts/updateMenusDates";
-import { updateRecipesIngredients } from "./scripts/updateRecipesIngredients";
 
-program
-  .command('indexAllRecipes')
-  .description('parses and indexes all new recipes')
-  .action(async () => {
-    await Promise.all([initRabbit(), initRedis(), initAlgolia()])
-    await indexNewRecipes()
+const signale = new Signale({ scope: 'scripts' })
+
+const glob = util.promisify(globCb)
+
+async function init() {
+  const scriptPaths = await glob('/*.js', {
+    root: path.join(__dirname, './scripts'),
+  })
+  const scripts = scriptPaths.map((path) => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const script = require(path)
+
+    const scriptShortName = path.match(/\/(scripts\/([^/]+)\.js$)/)[2]
+
+    script.name = scriptShortName
+
+    if (!script.main) {
+      throw new Error(
+        chalk`Missing export {yellow main} function in script {yellow ${scriptShortName}}`,
+      )
+    }
+
+    if (!script.description) {
+      signale.warn(
+        chalk`Missing {yellow description} for script {yellow ${scriptShortName}}`,
+      )
+    }
+
+    return script
   })
 
-program
-  .command('updateRecipesDates')
-  .description(
-    'update every recipe object and add a timestamp based on createdAt field',
-  )
-  .action(async () => {
-    await Promise.all([initAlgolia()])
-    await updateRecipesDates()
-  })
+  for (const script of scripts) {
+    program
+      .command(script.name)
+      .description(script.description)
+      .action(async () => {
+        await Promise.all([initRabbit(), initRedis(), initAlgolia()])
+        await script.main()
+      })
+  }
 
-program
-  .command('indexNewMenus')
-  .description('parses and indexes all new menus and their recipes')
-  .action(async () => {
-    await Promise.all([initRabbit(), initRedis(), initAlgolia()])
-    await indexNewMenus()
-  })
+  return program.parseAsync(process.argv)
+}
 
-program
-  .command('updateMenusDates')
-  .description(
-    'update every menu object and add a timestamp based on date field',
-  )
-  .action(async () => {
-    await Promise.all([initAlgolia()])
-    await updateMenusDates()
-  })
-
-
-program
-  .command('updateRecipesIngredients')
-  .description(
-    'update every recipe object and parse each ingredient',
-  )
-  .action(async () => {
-    await Promise.all([initAlgolia()])
-    await updateRecipesIngredients()
-  })
-
-program.parse(process.argv)
+init()

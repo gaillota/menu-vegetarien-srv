@@ -8,7 +8,10 @@ import { dateToTimestamp } from '../utils'
 const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
 const index = client.initIndex('menus')
 
-export async function updateMenusDates(): Promise<void> {
+export const description =
+  'update every menu object and add a timestamp based on date field'
+
+export async function main(): Promise<void> {
   let hits = []
 
   return index
