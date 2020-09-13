@@ -7,7 +7,7 @@ import { sendToRecipeFilterer } from '../workers/recipeFilterer'
 import { translateDateString } from './utils'
 import { dateToTimestamp } from '../utils'
 
-async function getMenu(slug): Promise<WeeklyMenu> {
+async function getMenu(slug: string): Promise<WeeklyMenu> {
   const result = await api(`/${slug}`)
   const menu = parseMenu(result)
 
@@ -25,8 +25,6 @@ async function getMenu(slug): Promise<WeeklyMenu> {
 
   menu.slug = slug
   menu.dateTimestamp = flow(get('date'), translateDateString, dateToTimestamp)(menu)
-
-  console.log(JSON.stringify(menu, null, 2))
 
   return menu
 }

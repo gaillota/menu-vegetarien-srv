@@ -7,7 +7,7 @@ export async function indexNewMenus(): Promise<void> {
   let currentPage = 1
 
   do {
-    const result = await getMenusSlugs({ page: currentPage })
+    const result = await getMenusSlugs(currentPage)
 
     for (const slug of result.data) {
       if (!(await isMenuAlreadyIndexed(slug))) {

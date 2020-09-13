@@ -18,7 +18,7 @@ function buildUrl(page): string {
   return `${baseUrl}${path}`
 }
 
-async function getMenusSlugs({ page }): Promise<PaginationResult<string>> {
+async function getMenusSlugs(page: number): Promise<PaginationResult<string>> {
   const url = buildUrl(page)
   const result = await request.get(url)
   const { data, pagesCount } = parseMenusList(result)
