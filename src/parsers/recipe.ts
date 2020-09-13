@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio'
 
 import { Recipe } from '../types'
-import parseIngredient from "./ingredient";
+import { parseIngredient } from "./ingredients";
 
 const TITLE_SELECTOR = 'div.blog-main > h1'
 const DESCRIPTION_SELECTOR = 'span.wpurp-recipe-description'

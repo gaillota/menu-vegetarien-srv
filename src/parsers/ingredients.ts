@@ -2,7 +2,7 @@ import { Ingredient } from '../types'
 
 const regex = /(\d*,?\d*)?\s?(.*)/
 
-function parseIngredient(text: string): Ingredient {
+export function parseIngredient(text: string): Ingredient {
   if (!text) {
     return null
   }
@@ -17,4 +17,6 @@ function parseIngredient(text: string): Ingredient {
   }
 }
 
-export default parseIngredient
+export function parseIngredients(ingredients: string[]): Ingredient[] {
+  return ingredients.map(parseIngredient)
+}

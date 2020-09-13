@@ -1,4 +1,4 @@
-import parseIngredient from '../ingredient'
+import { parseIngredient } from '../ingredients'
 
 describe('ingredient parser', () => {
   test('is nullable', () => {
