@@ -18,7 +18,6 @@ export async function main(): Promise<void> {
       },
     })
     .then(() => {
-      console.log('updating objects')
       hits = hits.map((hit) => ({
         ...hit,
         otherIngredients:
@@ -30,7 +29,6 @@ export async function main(): Promise<void> {
       }))
     })
     .then(async () => {
-      console.log('saving objects')
       await recipesIndex.saveObjects(hits).wait()
     })
 }
