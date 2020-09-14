@@ -10,6 +10,10 @@ export const description =
   'update recipe other ingredients and remove empty array'
 
 function hasBrokenIngredient(list: Ingredient[]): boolean {
+  if (!list) {
+    return false
+  }
+
   return list.some((i) => i.quantity === null)
 }
 
