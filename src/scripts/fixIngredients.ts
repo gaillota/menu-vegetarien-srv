@@ -1,31 +1,16 @@
 import algoliasearch from 'algoliasearch'
 import { ALGOLIA_API_KEY, ALGOLIA_APP_ID } from '../env'
-import { parseIngredients } from '../parsers/ingredients'
 import { Ingredient } from '../types'
+import { sendToRecipeParser } from '../workers/recipeParser'
 
 const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
 const recipesIndex = client.initIndex('recipes')
 
 export const description =
-  'update every recipe object and parse each ingredient'
+  'update recipe other ingredients and remove empty array'
 
-// const brokenIngredients = {
-//   label:
-//     'g chou-fleur,15 ml huile d’olive,250 g tomates cerises coupées en 2,80 g pesto,60 g fromage de chèvre émietté,1 oignon vert émincé',
-//   quantity: 500,
-// }
-function fixIngredients(brokenIngredients: Ingredient): Ingredient[] {
-  if (
-    typeof brokenIngredients !== 'object' ||
-    Array.isArray(brokenIngredients)
-  ) {
-    return brokenIngredients
-  }
-
-  const [firstLabel, ...rest] = brokenIngredients.label.split(',')
-  const ingredients = [`${brokenIngredients.quantity}${firstLabel}`, ...rest]
-
-  return parseIngredients(ingredients)
+function hasBrokenIngredient(list: Ingredient[]): boolean {
+  return list.some((i) => i.quantity === null)
 }
 
 export async function main(): Promise<void> {
@@ -38,14 +23,15 @@ export async function main(): Promise<void> {
         hits = hits.concat(batch)
       },
     })
-    .then(() => {
-      hits = hits.map((hit) => ({
-        ...hit,
-        ingredients: fixIngredients(hit.ingredients),
-        otherIngredients: fixIngredients(hit.otherIngredients),
-      }))
-    })
     .then(async () => {
-      await recipesIndex.saveObjects(hits).wait()
+      for (const recipe of hits) {
+        const { slug, ingredients, otherIngredients } = recipe
+        if (
+          hasBrokenIngredient(ingredients) ||
+          hasBrokenIngredient(otherIngredients)
+        ) {
+          await sendToRecipeParser(slug)
+        }
+      }
     })
 }
