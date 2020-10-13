@@ -1,5 +1,10 @@
 # Quick start
 ```
+# Create .env file
+cp .env.example .env
+
+# Fill in your Algolia keys
+
 # Create containers
 docker-compose up -d
 
