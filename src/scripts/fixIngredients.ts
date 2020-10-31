@@ -14,7 +14,7 @@ function hasBrokenIngredient(list: Ingredient[]): boolean {
     return false
   }
 
-  return list.some((i) => i.quantity === null)
+  return list.some((i) => i.quantity === null || i.quantity === 0)
 }
 
 export async function main(): Promise<void> {
@@ -34,6 +34,7 @@ export async function main(): Promise<void> {
           hasBrokenIngredient(ingredients) ||
           hasBrokenIngredient(otherIngredients)
         ) {
+          console.log('Fixing recipe:', slug)
           await sendToRecipeParser(slug)
         }
       }
