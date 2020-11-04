@@ -36,6 +36,11 @@ export interface PaginationResult<T> {
   data: Array<T>
 }
 
+export interface PaginationResultLight<T> {
+  page: number
+  data: Array<T>
+}
+
 export type ParsingResult<T> = Pick<PaginationResult<T>, 'data' | 'pagesCount'>
 
 export enum Queue {
