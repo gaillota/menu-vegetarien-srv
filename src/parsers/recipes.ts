@@ -31,7 +31,7 @@ export function parseRecipesList(
 
 export function parseRecipesListLight(
   html: string,
-): Pick<PaginationResult<string>, 'data' | 'pagesCount'> {
+): Pick<PaginationResult<string>, 'data'> {
   const $ = cheerio.load(html)
 
   const slugs = []
