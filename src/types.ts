@@ -1,5 +1,6 @@
 export interface Ingredient {
   quantity?: number
+  unit?: string
   label: string
 }
 
