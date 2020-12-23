@@ -7,9 +7,6 @@ function getSections($) {
   return $('div.elementor-inner > div.elementor-section-wrap > section')
 }
 
-// div.elementor-widget-wrap > div.elementor-widget-divider
-// div.elementor-widget-wrap > section.elementor-section > div.elementor-container > div.elementor-row > 3 * div.elementor-column
-
 function isDailyMenu($row, $html): boolean {
   return $row.find($html('div.elementor-element.elementor-col-33')).length === 3
 }
