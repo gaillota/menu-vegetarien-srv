@@ -31,6 +31,12 @@ async function init() {
       )
     }
 
+    if (typeof script.main !== 'function') {
+      throw new Error(
+        chalk`{yellow main} must be function in script {yellow ${scriptShortName}}`,
+      )
+    }
+
     if (!script.description) {
       signale.warn(
         chalk`Missing {yellow description} for script {yellow ${scriptShortName}}`,
@@ -47,6 +53,9 @@ async function init() {
       .action(async () => {
         await Promise.all([initRabbit(), initRedis(), initAlgolia()])
         await script.main()
+
+        // Exit process gracefully
+        process.exit(0)
       })
   }
 

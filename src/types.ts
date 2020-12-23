@@ -1,6 +1,12 @@
 export interface Ingredient {
   quantity?: number
+  unit?: string
   label: string
+}
+
+export interface OtherIngredient {
+  title: string
+  ingredients: Array<Ingredient>
 }
 
 export interface Recipe {
@@ -12,13 +18,13 @@ export interface Recipe {
   cookingTime: number
   servings: number
   ingredients: Array<Ingredient>
-  otherIngredients: Array<Ingredient>
+  otherIngredients?: Array<OtherIngredient>
   instructions: Array<string>
   createdAt: string
   createdAtTimestamp: number
 }
 
-export interface WeeklyMenu {
+export interface Menu {
   title: string
   slug: string
   description: string
