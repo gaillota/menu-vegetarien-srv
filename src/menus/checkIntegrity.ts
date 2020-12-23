@@ -38,7 +38,7 @@ export function checkMenu(menu: WeeklyMenu): void {
     const dayLabel = daysLabels[i]
     if (dailyMenu.length <= 0) {
       signale.fatal(
-        chalk`Error while parsing menu {yellow ${menu.slug}}: {red missing daily menu for ${dayLabel}`,
+        chalk`Error while parsing menu {yellow ${menu.slug}}: {red missing daily menu for ${dayLabel}}`,
       )
       throw new Error('Missing dish in menu')
     }

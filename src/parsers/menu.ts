@@ -1,101 +1,77 @@
 import * as cheerio from 'cheerio'
 import { dateRegex, recipeSlugRegex } from '../constants'
 import { WeeklyMenu } from '../types'
+import { cleanString } from '../utils'
 
 function getSections($) {
-  return $('div.elementor-section-wrap > section')
+  return $('div.elementor-inner > div.elementor-section-wrap > section')
 }
 
-function getRow($html) {
-  return $html.find('div.elementor-widget-container').children().first()
+// div.elementor-widget-wrap > div.elementor-widget-divider
+// div.elementor-widget-wrap > section.elementor-section > div.elementor-container > div.elementor-row > 3 * div.elementor-column
+
+function isDailyMenu($row, $html): boolean {
+  return $row.find($html('div.elementor-element.elementor-col-33')).length === 3
 }
 
-function isDailyMenu($row, index): boolean {
-  return (
-    $row.hasClass('elementor-posts-container') || menuIndexes.includes(index)
-  )
-}
-
-function getMeals($row) {
-  return (
-    $row.find('article.elementor-post') || $row.find('div.elementor-col-33')
-  )
+function getMeals($row, $html) {
+  return $row.find($html('div.elementor-element.elementor-col-33'))
 }
 
 function getMealTitle($meal): string {
-  let title = $meal
-    .find('div.elementor-post__text div.elementor-post__title a')
-    .text()
-    .trim()
-
-  if (!title) {
-    const $link = $meal.find('div.elementor-text-editor a')
-    title = $link.text()
-  }
-
-  return title
+  return cleanString(
+    $meal
+      .find('div.elementor-widget-wrap > div.elementor-widget-text-editor a')
+      .text(),
+  )
 }
 
 function getMealSlug($meal): string {
-  const $link = $meal.find('a.elementor-post__thumbnail__link')
+  const $link = $meal.find(
+    'div.elementor-widget-wrap > div.elementor-widget-text-editor a',
+  )
   const url = $link.attr('href')
-  let [, slug] = recipeSlugRegex.exec(url) || []
-
-  if (!slug) {
-    const url = $link.attr('href')
-    const [, result] = recipeSlugRegex.exec(url) || []
-    slug = result
-  }
+  const [, slug] = recipeSlugRegex.exec(url) || []
 
   return slug
 }
 
 function getMealPhotoUrl($meal): string {
-  const $link = $meal.find('a.elementor-post__thumbnail__link')
-  let photoUrl = $link.find('div.elementor-post__thumbnail img').attr('src')
-
-  if (!photoUrl) {
-    photoUrl = $meal.find('div.elementor-widget-image img').attr('src')
-  }
-
-  return photoUrl
+  return $meal
+    .find('div.elementor-widget-wrap > div.elementor-widget-image img')
+    .attr('src')
 }
 
 function getMealUrl($meal): string {
-  const $link = $meal.find('a.elementor-post__thumbnail__link')
-  let url = $link.attr('href')
+  const $link = $meal.find(
+    'div.elementor-widget-wrap > div.elementor-widget-text-editor a',
+  )
 
-  if (!url) {
-    const $link = $meal.find('div.elementor-text-editor a')
-    url = $link.attr('href')
-  }
-
-  return url
+  return $link.attr('href')
 }
 
-const menuIndexes = [2, 4, 7, 9, 11]
-
 function parseMenu(html: string): WeeklyMenu {
-  const $ = cheerio.load(html)
-  const title = $('div.blog-main > h1').text()
-  const description = $('div.elementor-text-editor p').eq(1).text()
-  const photoUrl = $('div.blog-main > div.blog-rightsidebar-img > img').attr(
-    'src',
+  const $html = cheerio.load(html)
+  const title = cleanString($html('div.blog-main > h1').text())
+  const description = cleanString(
+    $html('div.elementor-text-editor p').eq(1).text(),
   )
+  const photoUrl = $html(
+    'div.blog-main > div.blog-rightsidebar-img > img',
+  ).attr('src')
   const [date] = dateRegex.exec(title.toLowerCase()) || []
-  const $sections = getSections($)
+  const $sections = getSections($html)
   const dailyMenus = []
 
-  $sections.each((index, element) => {
-    const $section = $(element)
-    const $row = getRow($section)
+  $sections.each((_, element) => {
+    const $row = $html(element)
 
-    if (isDailyMenu($row, index)) {
-      const $meals = getMeals($row)
+    if (isDailyMenu($row, $html)) {
+      const $meals = getMeals($row, $html)
       const menu = []
 
       $meals.each((_, element) => {
-        const $meal = $(element)
+        const $meal = $html(element)
         const title = getMealTitle($meal)
         const slug = getMealSlug($meal)
         const photoUrl = getMealPhotoUrl($meal)
