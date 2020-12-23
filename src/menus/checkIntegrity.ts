@@ -47,21 +47,21 @@ export function checkMenu(menu: WeeklyMenu): void {
       const dishLabel = dishesLabels[i]
       if (!dish.title) {
         signale.fatal(
-          chalk`Error while parsing menu {yellow ${menu.title}} -> {yellow ${dayLabel}} -> {yellow ${dishLabel}}: {red no name}`,
+          chalk`Error while parsing menu {yellow ${menu.title}} -> {blue ${dayLabel}} -> {green ${dishLabel}}: {red no name}`,
         )
         throw new Error('Missing title to dish')
       }
 
       if (!dish.slug) {
         signale.fatal(
-          chalk`Error while parsing menu {yellow ${menu.title}} -> {yellow ${dayLabel}} -> {yellow ${dish.title} (${dishLabel})}: {red no slug}`,
+          chalk`Error while parsing menu {yellow ${menu.title}} -> {blue ${dayLabel}} -> {green ${dish.title} (${dishLabel})}: {red no slug}`,
         )
         throw new Error('Missing slug to dish')
       }
 
       if (!dish.photoUrl) {
         signale.fatal(
-          chalk`Error while parsing menu {yellow ${menu.title}} -> {yellow ${dayLabel}} -> {yellow ${dish.title} (${dishLabel})}: {red no photoUrl}`,
+          chalk`Error while parsing menu {yellow ${menu.title}} -> {blue ${dayLabel}} -> {green ${dish.title} (${dishLabel})}: {red no photoUrl}`,
         )
         throw new Error('Missing photo url to dish')
       }
