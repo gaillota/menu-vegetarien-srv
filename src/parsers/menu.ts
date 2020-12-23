@@ -1,6 +1,6 @@
 import * as cheerio from 'cheerio'
 import { dateRegex, recipeSlugRegex } from '../constants'
-import { WeeklyMenu } from '../types'
+import { Menu } from '../types'
 import { cleanString } from '../utils'
 
 function getSections($) {
@@ -47,7 +47,12 @@ function getMealUrl($meal): string {
   return $link.attr('href')
 }
 
-function parseMenu(html: string): WeeklyMenu {
+function parseMenu(
+  html: string,
+): Pick<
+  Menu,
+  'title' | 'description' | 'photoUrl' | 'date' | 'dailyMenus'
+> {
   const $html = cheerio.load(html)
   const title = cleanString($html('div.blog-main > h1').text())
   const description = cleanString(
@@ -99,8 +104,6 @@ function parseMenu(html: string): WeeklyMenu {
     photoUrl,
     date,
     dailyMenus,
-    slug: null,
-    dateTimestamp: null,
   }
 }
 

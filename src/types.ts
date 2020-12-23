@@ -19,7 +19,7 @@ export interface Recipe {
   createdAtTimestamp: number
 }
 
-export interface WeeklyMenu {
+export interface Menu {
   title: string
   slug: string
   description: string

@@ -1,13 +1,13 @@
 import { Signale } from 'signale'
 import * as chalk from 'chalk'
-import { WeeklyMenu } from '../types'
+import { Menu } from '../types'
 
 const signale = new Signale({ scope: 'menu-parser' })
 
 const daysLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 const dishesLabels = ['Starter', 'Dish', 'Dessert']
 
-export function checkMenu(menu: WeeklyMenu): void {
+export function checkMenu(menu: Menu): void {
   if (!menu.title) {
     signale.fatal(
       chalk`Error while parsing menu {yellow ${menu.slug}}: {red no name}`,

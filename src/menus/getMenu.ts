@@ -1,27 +1,30 @@
 import * as flow from 'lodash/fp/flow'
 import * as get from 'lodash/fp/get'
 import parseMenu from '../parsers/menu'
-import { WeeklyMenu } from '../types'
+import { Menu } from '../types'
 import { api } from '../api'
 import { sendToRecipeFilterer } from '../workers/recipeFilterer'
 import { translateDateString } from './utils'
 import { dateToTimestamp } from '../utils'
 import { checkMenu } from './checkIntegrity'
 
-async function getMenu(slug: string): Promise<WeeklyMenu> {
+async function getMenu(slug: string): Promise<Menu> {
   const result = await api(`/${slug}`)
-  const menu = parseMenu(result)
-  menu.slug = slug
-  menu.dateTimestamp = flow(
-    get('date'),
-    translateDateString,
-    dateToTimestamp,
-  )(menu)
+  const parsedMenu = parseMenu(result)
+  const menu: Menu = {
+    ...parsedMenu,
+    slug,
+    dateTimestamp: flow(
+      get('date'),
+      translateDateString,
+      dateToTimestamp,
+    )(parsedMenu),
+  }
 
   checkMenu(menu)
 
   // Send every recipe in parser worker in case not parsed yet
-  for (const dailyMenu of menu.dailyMenus) {
+  for (const dailyMenu of parsedMenu.dailyMenus) {
     await Promise.all(
       dailyMenu.map(({ slug }) => {
         if (!slug) {
