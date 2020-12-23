@@ -1,7 +1,7 @@
 import * as cheerio from 'cheerio'
 
 import { Recipe } from '../types'
-import { parseIngredient } from "./ingredients";
+import { parseIngredient } from './ingredients'
 
 const TITLE_SELECTOR = 'div.blog-main > h1'
 const DESCRIPTION_SELECTOR = 'span.wpurp-recipe-description'
@@ -19,7 +19,21 @@ const INSTRUCTIONS_ITEM_SELECTOR =
   'ol.wpurp-recipe-instruction-container li.wpurp-recipe-instruction'
 const INSTRUCTIONS_TEXT_SELECTOR = 'span.wpurp-recipe-instruction-text'
 
-function parseRecipe(html: string): Recipe {
+function parseRecipe(
+  html: string,
+): Pick<
+  Recipe,
+  | 'title'
+  | 'description'
+  | 'photoUrl'
+  | 'preparationTime'
+  | 'cookingTime'
+  | 'servings'
+  | 'ingredients'
+  | 'otherIngredients'
+  | 'instructions'
+  | 'createdAt'
+> {
   const $ = cheerio.load(html)
   const title = $(TITLE_SELECTOR).text()
   const description = $(DESCRIPTION_SELECTOR).text()
@@ -82,8 +96,6 @@ function parseRecipe(html: string): Recipe {
     otherIngredients,
     instructions,
     createdAt,
-    slug: null,
-    createdAtTimestamp: null,
   }
 }
 

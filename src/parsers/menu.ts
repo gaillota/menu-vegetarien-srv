@@ -1,33 +1,83 @@
 import * as cheerio from 'cheerio'
 import { dateRegex, recipeSlugRegex } from '../constants'
-import { WeeklyMenu } from '../types'
+import { Menu } from '../types'
+import { cleanString } from '../utils'
 
-const menuIndexes = [2, 4, 7, 9, 11]
+function getSections($) {
+  return $('div.elementor-inner > div.elementor-section-wrap > section')
+}
 
-function parseMenu(html: string): WeeklyMenu {
-  const $ = cheerio.load(html)
-  const title = $('div.blog-main > h1').text()
-  const description = $('div.elementor-text-editor p').eq(1).text()
-  const photoUrl = $('div.blog-main > div.blog-rightsidebar-img > img').attr(
-    'src',
+function isDailyMenu($row, $html): boolean {
+  return $row.find($html('div.elementor-element.elementor-col-33')).length === 3
+}
+
+function getMeals($row, $html) {
+  return $row.find($html('div.elementor-element.elementor-col-33'))
+}
+
+function getMealTitle($meal): string {
+  return cleanString(
+    $meal
+      .find('div.elementor-widget-wrap > div.elementor-widget-text-editor a')
+      .text(),
   )
-  const [date] = dateRegex.exec(title.toLowerCase()) || []
+}
 
+function getMealSlug($meal): string {
+  const $link = $meal.find(
+    'div.elementor-widget-wrap > div.elementor-widget-text-editor a',
+  )
+  const url = $link.attr('href')
+  const [, slug] = recipeSlugRegex.exec(url) || []
+
+  return slug
+}
+
+function getMealPhotoUrl($meal): string {
+  return $meal
+    .find('div.elementor-widget-wrap > div.elementor-widget-image img')
+    .attr('src')
+}
+
+function getMealUrl($meal): string {
+  const $link = $meal.find(
+    'div.elementor-widget-wrap > div.elementor-widget-text-editor a',
+  )
+
+  return $link.attr('href')
+}
+
+function parseMenu(
+  html: string,
+): Pick<
+  Menu,
+  'title' | 'description' | 'photoUrl' | 'date' | 'dailyMenus'
+> {
+  const $html = cheerio.load(html)
+  const title = cleanString($html('div.blog-main > h1').text())
+  const description = cleanString(
+    $html('div.elementor-text-editor p').eq(1).text(),
+  )
+  const photoUrl = $html(
+    'div.blog-main > div.blog-rightsidebar-img > img',
+  ).attr('src')
+  const [date] = dateRegex.exec(title.toLowerCase()) || []
+  const $sections = getSections($html)
   const dailyMenus = []
-  $('div.elementor-section-wrap > section').each((index, element) => {
-    if (menuIndexes.includes(index)) {
-      const $menu = $(element)
+
+  $sections.each((_, element) => {
+    const $row = $html(element)
+
+    if (isDailyMenu($row, $html)) {
+      const $meals = getMeals($row, $html)
       const menu = []
 
-      $menu.find('div.elementor-col-33').each((_, element) => {
-        const $meal = $(element)
-        const photoUrl = $meal
-          .find('div.elementor-widget-image img')
-          .attr('src')
-        const $link = $meal.find('div.elementor-text-editor a')
-        const title = $link.text()
-        const url = $link.attr('href')
-        const [, slug] = recipeSlugRegex.exec(url) || []
+      $meals.each((_, element) => {
+        const $meal = $html(element)
+        const title = getMealTitle($meal)
+        const slug = getMealSlug($meal)
+        const photoUrl = getMealPhotoUrl($meal)
+        const url = getMealUrl($meal)
         const recipe = {
           title,
           slug,
@@ -54,8 +104,6 @@ function parseMenu(html: string): WeeklyMenu {
     photoUrl,
     date,
     dailyMenus,
-    slug: null,
-    dateTimestamp: null,
   }
 }
 
