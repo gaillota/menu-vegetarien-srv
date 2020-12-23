@@ -4,6 +4,11 @@ export interface Ingredient {
   label: string
 }
 
+export interface OtherIngredient {
+  title: string
+  ingredients: Array<Ingredient>
+}
+
 export interface Recipe {
   title: string
   slug: string
@@ -13,7 +18,7 @@ export interface Recipe {
   cookingTime: number
   servings: number
   ingredients: Array<Ingredient>
-  otherIngredients: Array<Ingredient>
+  otherIngredients?: Array<OtherIngredient>
   instructions: Array<string>
   createdAt: string
   createdAtTimestamp: number
