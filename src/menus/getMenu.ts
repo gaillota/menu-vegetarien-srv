@@ -6,7 +6,7 @@ import { api } from '../api'
 import { sendToRecipeFilterer } from '../workers/recipeFilterer'
 import { translateDateString } from './utils'
 import { dateToTimestamp } from '../utils'
-import { checkMenu } from "./integrity";
+import { checkMenu } from './checkIntegrity'
 
 async function getMenu(slug: string): Promise<WeeklyMenu> {
   const result = await api(`/${slug}`)
