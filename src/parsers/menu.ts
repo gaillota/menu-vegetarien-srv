@@ -8,51 +8,74 @@ function getSections($) {
 }
 
 function isDailyMenu($row, $html): boolean {
-  return $row.find($html('div.elementor-element.elementor-col-33')).length === 3
+  return (
+    $row.find($html('div.elementor-element.elementor-col-33')).length === 3 ||
+    $row.find($html('article.elementor-post.elementor-grid-item')).length === 3
+  )
 }
 
 function getMeals($row, $html) {
-  return $row.find($html('div.elementor-element.elementor-col-33'))
+  const $meals = $row.find($html('div.elementor-element.elementor-col-33'))
+
+  if ($meals.length > 0) {
+    return $meals
+  }
+
+  return $row.find($html('article.elementor-post.elementor-grid-item'))
 }
 
 function getMealTitle($meal): string {
-  return cleanString(
-    $meal
-      .find('div.elementor-widget-wrap > div.elementor-widget-text-editor a')
-      .text(),
-  )
+  let title = $meal
+    .find('div.elementor-widget-wrap > div.elementor-widget-text-editor a')
+    .text()
+
+  if (!title) {
+    title = $meal.find('div.elementor-widget-heading a').text()
+  }
+
+  if (!title) {
+    title = $meal
+      .find('div.elementor-post__text > div.elementor-post__title a')
+      .text()
+  }
+
+  return cleanString(title)
+}
+
+function getMealUrl($meal): string {
+  let url = $meal
+    .find('div.elementor-image a')
+    .attr('href')
+
+  if (!url) {
+    url = $meal.find('a.elementor-post__thumbnail__link').attr('href')
+  }
+
+  return url
 }
 
 function getMealSlug($meal): string {
-  const $link = $meal.find(
-    'div.elementor-widget-wrap > div.elementor-widget-text-editor a',
-  )
-  const url = $link.attr('href')
+  const url = getMealUrl($meal)
   const [, slug] = recipeSlugRegex.exec(url) || []
 
   return slug
 }
 
 function getMealPhotoUrl($meal): string {
-  return $meal
+  let url = $meal
     .find('div.elementor-widget-wrap > div.elementor-widget-image img')
     .attr('src')
-}
 
-function getMealUrl($meal): string {
-  const $link = $meal.find(
-    'div.elementor-widget-wrap > div.elementor-widget-text-editor a',
-  )
+  if (!url) {
+    url = $meal.find('a.elementor-post__thumbnail__link img').attr('src')
+  }
 
-  return $link.attr('href')
+  return url
 }
 
 function parseMenu(
   html: string,
-): Pick<
-  Menu,
-  'title' | 'description' | 'photoUrl' | 'date' | 'dailyMenus'
-> {
+): Pick<Menu, 'title' | 'description' | 'photoUrl' | 'date' | 'dailyMenus'> {
   const $html = cheerio.load(html)
   const title = cleanString($html('div.blog-main > h1').text())
   const description = cleanString(

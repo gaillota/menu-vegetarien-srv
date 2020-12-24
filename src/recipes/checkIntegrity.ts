@@ -22,13 +22,13 @@ function checkIngredients(title: string, ingredients: Ingredient[]): void {
 
     if (!ingredient.quantity) {
       signale.fatal(
-        chalk`Error while parsing recipe {yellow ${title}} -> {blue ${ingredient.label}: {red no quantity}`,
+        chalk`Error while parsing recipe {yellow ${title}} -> {blue ${ingredient.label}}: {red no quantity}`,
       )
     }
 
     if (!ingredient.unit) {
       signale.fatal(
-        chalk`Error while parsing recipe {yellow ${title}} -> {blue ${ingredient.label}: {red no unit}`,
+        chalk`Error while parsing recipe {yellow ${title}} -> {blue ${ingredient.label}}: {red no unit}`,
       )
     }
   })
