@@ -4,15 +4,13 @@ import * as config from './config.json'
 
 import { Signale } from 'signale'
 import * as chalk from 'chalk'
-import { Index, Recipe } from "../types";
+import { Recipe } from '../types'
 
 const signale = new Signale({ scope: 'algolia' })
 
 const client = algoliasearch(ALGOLIA_APP_ID, ALGOLIA_API_KEY)
 
-export const indices = {
-  [Index.Recipes]: null,
-}
+export const indices = {}
 
 export async function initAlgolia(): Promise<void> {
   for (const [index, settings] of Object.entries(config.indices)) {
@@ -32,7 +30,10 @@ export async function saveObjects(
   await indices[index].saveObjects(objects).wait()
 }
 
-export async function getObjectById(index: string, id: string): Promise<Recipe> {
+export async function getObjectById(
+  index: string,
+  id: string,
+): Promise<Recipe> {
   signale.await(
     chalk`Getting object {yellow ${id}} from index {yellow ${index}}...`,
   )
