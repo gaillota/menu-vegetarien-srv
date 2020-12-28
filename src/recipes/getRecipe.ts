@@ -1,7 +1,7 @@
 import { Recipe } from '../types'
 import parseRecipe from '../parsers/recipe'
 import { api } from '../api'
-import { checkRecipe } from './checkIntegrity'
+import { checkRecipe } from './checkRecipe'
 import { dateToTimestamp } from '../utils'
 
 export async function getRecipe(slug: string): Promise<Recipe> {
@@ -13,7 +13,7 @@ export async function getRecipe(slug: string): Promise<Recipe> {
     createdAtTimestamp: dateToTimestamp(parsedRecipe.createdAt)
   }
 
-  checkRecipe(recipe)
+  await checkRecipe(recipe)
 
   return recipe
 }

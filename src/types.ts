@@ -50,9 +50,32 @@ export enum Queue {
   RecipeIndexer = 'recipe-indexer',
   MenuParser = 'menu-parser',
   MenuIndexer = 'menu-indexer',
+  ApnDispatcher = 'apn-dispatcher',
 }
 
 export enum Index {
   Recipes = 'recipes',
   Menus = 'menus',
+}
+
+export enum NotificationType {
+  Alert = 'alert',
+  Background = 'background',
+}
+
+export interface Notification {
+  title: string
+  body?: string
+  expiry?: number
+  type?: NotificationType
+}
+
+export interface NotificationEmitter {
+  devicesIds: string[],
+  notification: Notification
+}
+
+export interface IntegrityError {
+  message?: string
+  fatal?: boolean
 }
