@@ -1,10 +1,9 @@
 import algoliasearch from 'algoliasearch'
-import { ALGOLIA_API_KEY, ALGOLIA_APP_ID } from '../env'
-import * as config from './config.json'
-
 import { Signale } from 'signale'
 import * as chalk from 'chalk'
-import { Recipe } from '../types'
+import { ALGOLIA_API_KEY, ALGOLIA_APP_ID } from '../env'
+import { Menu, Recipe } from '../types'
+import * as config from './config.json'
 
 const signale = new Signale({ scope: 'algolia' })
 
@@ -33,10 +32,21 @@ export async function saveObjects(
 export async function getObjectById(
   index: string,
   id: string,
-): Promise<Recipe> {
+): Promise<Recipe | Menu | null> {
   signale.await(
     chalk`Getting object {yellow ${id}} from index {yellow ${index}}...`,
   )
 
   return indices[index].getObject(id)
+}
+
+export async function deleteObjectById(
+  index: string,
+  id: string,
+): Promise<void> {
+  signale.await(
+    chalk`Removing object {yellow ${id}} from index {yellow ${index}}...`,
+  )
+
+  return indices[index].deleteObject(id)
 }

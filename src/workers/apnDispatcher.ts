@@ -1,10 +1,10 @@
-import apn from 'apn'
+import * as apn from 'apn'
 import { Signale } from 'signale'
+import * as chalk from 'chalk'
 import { Queue, NotificationEmitter, NotificationType } from '../types'
 import { sendToQueue } from '../rabbitmq'
 import { apnProvider } from '../apn'
 import { APN_APP_ID } from '../env'
-import chalk from 'chalk'
 
 export const queue = Queue.ApnDispatcher
 const signale = new Signale({ scope: 'apn' })

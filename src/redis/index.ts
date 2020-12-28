@@ -8,6 +8,10 @@ const signale = new Signale({ scope: 'redis' })
 let client = null
 
 export async function initRedis(): Promise<void> {
+  if (client) {
+    return Promise.resolve()
+  }
+
   return new Promise((resolve, reject) => {
     client = redis.createClient({
       url: REDIS_URL,
