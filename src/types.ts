@@ -48,6 +48,7 @@ export enum Queue {
   RecipeFilterer = 'recipe-filterer',
   RecipeParser = 'recipe-parser',
   RecipeIndexer = 'recipe-indexer',
+  RecipeChecker = 'recipe-checker',
   MenuParser = 'menu-parser',
   MenuIndexer = 'menu-indexer',
   MenuChecker = 'menu-checker',

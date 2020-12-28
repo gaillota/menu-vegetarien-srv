@@ -7,6 +7,7 @@ import { checkMenu } from '../menus/checkMenu'
 import { sendToMenuParser } from './menuParser'
 
 export const queue = Queue.MenuChecker
+const index = Index.Menus
 const signale = new Signale({ scope: Queue.MenuChecker })
 
 export async function sendToMenuChecker(slug: string): Promise<void> {
@@ -14,16 +15,13 @@ export async function sendToMenuChecker(slug: string): Promise<void> {
 }
 
 export async function work(slug: string): Promise<void> {
-  const menu = (await getObjectById(Index.Menus, slug)) as Menu
-  if (!menu) {
-    signale.debug(chalk`{yellow ${slug}}: {magenta Menu not found}`)
-  }
+  const menu = (await getObjectById(index, slug)) as Menu
 
   try {
     await checkMenu(menu)
   } catch (e) {
     signale.debug(chalk`Found broken menu: {yellow ${slug}}`)
-    await deleteObjectById(Index.Menus, slug)
+    await deleteObjectById(index, slug)
     signale.await(chalk`Sending menu for re-parsing: {yellow ${slug}}`)
     await sendToMenuParser(slug)
   }
