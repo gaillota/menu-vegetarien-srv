@@ -1,6 +1,6 @@
 import { Ingredient } from '../types'
 
-const quantityRegex = /(\d*,?\d*)?\s?(.*)/
+const quantityRegex = /(\d*,?\/?\d*)?\s?(.*)/
 const unitRegex = /(ml|cl|l\s|mg|g\s|kg|càs|càc)?(.*)/
 
 export function parseIngredient(text: string): Ingredient {
@@ -8,12 +8,12 @@ export function parseIngredient(text: string): Ingredient {
     return null
   }
 
-  const [, quantity, rest] = quantityRegex.exec(text) || []
-  const [, unit, label] = unitRegex.exec(rest) || []
+  const [, quantity, rest] = quantityRegex.exec(text.trim()) || []
+  const [, unit, label] = unitRegex.exec(rest.trim()) || []
 
   return {
-    label,
     unit,
+    label: label.trim(),
     quantity: quantity ? Number(quantity.replace(/,/g, '.')) : null,
   }
 }
