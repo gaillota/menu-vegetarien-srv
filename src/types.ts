@@ -12,10 +12,10 @@ export interface OtherIngredient {
 export interface Recipe {
   title: string
   slug: string
-  description: string
+  description?: string
   photoUrl: string
   preparationTime: number
-  cookingTime: number
+  cookingTime?: number
   servings: number
   ingredients: Array<Ingredient>
   otherIngredients?: Array<OtherIngredient>
@@ -48,8 +48,10 @@ export enum Queue {
   RecipeFilterer = 'recipe-filterer',
   RecipeParser = 'recipe-parser',
   RecipeIndexer = 'recipe-indexer',
+  RecipeChecker = 'recipe-checker',
   MenuParser = 'menu-parser',
   MenuIndexer = 'menu-indexer',
+  MenuChecker = 'menu-checker',
   ApnDispatcher = 'apn-dispatcher',
 }
 

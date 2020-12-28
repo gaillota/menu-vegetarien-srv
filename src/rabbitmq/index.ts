@@ -24,6 +24,10 @@ async function initTopology(): Promise<void> {
 }
 
 export async function initRabbit(): Promise<void> {
+  if (channel) {
+    return Promise.resolve()
+  }
+
   const conn = await amqp.connect(CLOUDAMQP_URL)
   channel = await conn.createChannel()
 

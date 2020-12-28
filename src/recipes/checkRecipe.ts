@@ -49,7 +49,6 @@ function checkFields(recipe: Recipe): void {
     signale.debug(
       chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no description}`,
     )
-    throw new Error(`${recipe.title}: No description`)
   }
 
   if (!recipe.photoUrl) {
@@ -70,7 +69,6 @@ function checkFields(recipe: Recipe): void {
     signale.debug(
       chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no cooking time}`,
     )
-    throw new Error(`${recipe.title}: No cooking time`)
   }
 
   if (!recipe.servings) {
