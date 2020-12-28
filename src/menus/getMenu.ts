@@ -6,7 +6,7 @@ import { api } from '../api'
 import { sendToRecipeFilterer } from '../workers/recipeFilterer'
 import { translateDateString } from './utils'
 import { dateToTimestamp } from '../utils'
-import { checkMenu } from './checkIntegrity'
+import { checkMenu } from './checkMenu'
 
 async function getMenu(slug: string): Promise<Menu> {
   const result = await api(`/${slug}`)
@@ -21,7 +21,7 @@ async function getMenu(slug: string): Promise<Menu> {
     )(parsedMenu),
   }
 
-  checkMenu(menu)
+  await checkMenu(menu)
 
   // Send every recipe in parser worker in case not parsed yet
   for (const dailyMenu of parsedMenu.dailyMenus) {

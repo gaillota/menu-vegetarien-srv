@@ -48,6 +48,7 @@
     "@koa/router": "^9.3.1",
     "algoliasearch": "^4.3.1",
     "amqplib": "^0.6.0",
+    "apn": "^2.2.0",
     "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.3",
     "commander": "^6.0.0",
