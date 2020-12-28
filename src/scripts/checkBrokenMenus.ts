@@ -2,7 +2,7 @@ import algoliasearch from 'algoliasearch'
 import { Signale } from 'signale'
 import * as chalk from 'chalk'
 import { ALGOLIA_API_KEY, ALGOLIA_APP_ID } from '../env'
-import { checkMenu } from '../menus/checkIntegrity'
+import { checkMenu } from '../menus/checkMenu'
 import { sendToMenuParser } from '../workers/menuParser'
 
 const signale = new Signale({ scope: 'algolia[menus]' })
