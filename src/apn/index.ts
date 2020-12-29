@@ -1,16 +1,15 @@
-import * as path from 'path'
 import * as apn from 'apn'
-import * as env from '../env'
+import { ENV, APN_KEY, APN_KEY_ID, APN_TEAM_ID } from '../env'
 
 // sandbox or production APN service
-const isProduction = env.ENV === 'production'
+const isProduction = ENV === 'production'
 
 // configuring APN with credentials
 const apnOptions = {
   token: {
-    key: path.join(__dirname, '../../../certs/APN_AuthKey.p8'),
-    keyId: env.APN_KEY_ID,
-    teamId: env.APN_TEAM_ID,
+    key: APN_KEY,
+    keyId: APN_KEY_ID,
+    teamId: APN_TEAM_ID,
   },
   production: isProduction,
 }
