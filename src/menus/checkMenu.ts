@@ -1,8 +1,8 @@
 import { Signale } from 'signale'
 import * as chalk from 'chalk'
 import { Menu } from '../types'
-import { sendNotification } from "../workers/apnDispatcher";
-import { OWNER_DEVICE_ID } from "../env";
+import { sendNotification } from '../workers/apnDispatcher'
+import { OWNER_DEVICE_ID } from '../env'
 
 const signale = new Signale({ scope: 'menu-parser' })
 
