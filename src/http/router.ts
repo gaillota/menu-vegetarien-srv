@@ -2,6 +2,11 @@ import * as Router from '@koa/router'
 import { Context } from 'koa'
 import { main as indexNewRecipes } from '../scripts/indexNewRecipes'
 import { main as indexNewMenus } from '../scripts/indexNewMenus'
+import { Notification } from '../types'
+import { sendNotification } from '../workers/apnDispatcher'
+import { OWNER_DEVICE_ID } from '../env'
+import { validateBody } from './middlewares/validateBody'
+import { NotificationSchema } from './schemas/notification'
 
 const router = new Router()
 
@@ -16,5 +21,20 @@ router.get('/index-new-menus', async (ctx: Context) => {
   ctx.status = 200
   ctx.body = 'Ok'
 })
+
+router.post(
+  '/push-notification',
+  validateBody(NotificationSchema),
+  async (ctx: Context) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const notification: Notification = ctx.request.body
+
+    await sendNotification({
+      notification,
+      devicesIds: [OWNER_DEVICE_ID],
+    })
+  },
+)
 
 export default router
