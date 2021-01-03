@@ -1,8 +1,8 @@
-import { Context, Next } from 'koa'
+import { Context, Middleware, Next } from "koa";
 import { METHOD_NOT_ALLOWED } from 'http-status'
 import { ENV } from '../../env'
 
-export function isEnv(envName: string) {
+export function isEnv(envName: string): Middleware {
   return async function isEnvMiddleware(
     ctx: Context,
     next: Next,

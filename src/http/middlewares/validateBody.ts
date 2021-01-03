@@ -1,7 +1,7 @@
-import { Context } from 'koa'
+import { Context, Middleware } from "koa";
 import { Schema, ValidationResult } from 'joi'
 
-export function validateBody(schema: Schema) {
+export function validateBody(schema: Schema): Middleware {
   return async function checkBodyMiddleware(
     ctx: Context,
   ): Promise<ValidationResult> {
