@@ -6,7 +6,7 @@ import { initApollo } from './apollo'
 
 Promise.all([initApollo(), initRabbit(), initRedis(), initAlgolia()])
   .then(([server]) => {
-    server.listen().then(({ url }) => {
+    server.listen(process.env.PORT).then(({ url }) => {
       signale.success(`🚀  Server ready at ${url}`)
     })
   })
