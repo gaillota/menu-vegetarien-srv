@@ -1,16 +1,13 @@
-import * as https from 'http'
 import * as signale from 'signale'
-import { initHttp } from './http'
 import { initRabbit } from './rabbitmq'
 import { initRedis } from './redis'
 import { initAlgolia } from './algolia'
+import { initApollo } from './apollo'
 
-Promise.all([initHttp(), initRabbit(), initRedis(), initAlgolia()])
-  .then(([app]) => {
-    https.createServer(app).listen(process.env.PORT || 3000, () => {
-      signale.success(
-        `🚀  Server ready at http://localhost:${process.env.PORT || 3000}`,
-      )
+Promise.all([initApollo(), initRabbit(), initRedis(), initAlgolia()])
+  .then(([server]) => {
+    server.listen().then(({ url }) => {
+      signale.success(`🚀  Server ready at ${url}`)
     })
   })
   .catch((error) => {
