@@ -7,7 +7,7 @@ import { initAlgolia } from './algolia'
 
 Promise.all([initHttp(), initRabbit(), initRedis(), initAlgolia()])
   .then(([app]) => {
-    https.createServer(app.callback()).listen(process.env.PORT || 3000, () => {
+    https.createServer(app).listen(process.env.PORT || 3000, () => {
       signale.success(
         `🚀  Server ready at http://localhost:${process.env.PORT || 3000}`,
       )

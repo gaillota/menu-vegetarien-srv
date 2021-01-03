@@ -77,7 +77,8 @@ export interface NotificationEmitter {
   notification: Notification
 }
 
-export interface IntegrityError {
-  message?: string
-  fatal?: boolean
+export interface DeviceToken {
+  os?: string
+  token: string
+  createdAt: number
 }
