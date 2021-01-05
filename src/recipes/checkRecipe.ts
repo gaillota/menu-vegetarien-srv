@@ -1,129 +1,131 @@
 import { Signale } from 'signale'
 import * as chalk from 'chalk'
 import { Ingredient, Recipe } from '../types'
-import { sendNotification } from '../workers/apnDispatcher'
-import { OWNER_DEVICE_ID } from '../env'
 
 const signale = new Signale({ scope: 'recipe-parser' })
 
-function checkIngredients(title: string, ingredients: Ingredient[]): void {
-  if (ingredients.length <= 0) {
-    signale.fatal(
-      chalk`Error while parsing recipe {yellow ${title}}: {red no ingredients}`,
+function checkIngredients(
+  recipeName: string,
+  subRecipeName: string,
+  ingredients: Ingredient[],
+  throwError: boolean,
+): void {
+  if (!ingredients || ingredients.length <= 0) {
+    const logFn = throwError ? signale.fatal : signale.warn
+    logFn(
+      chalk`Recipe {yellow ${recipeName}}${
+        subRecipeName ? chalk` -> Other ingredient {blue ${subRecipeName}}` : ''
+      }: {red no ingredients}`,
     )
 
-    throw new Error(`${title}: No ingredients`)
+    if (throwError) {
+      throw new Error(
+        `Recipe ${recipeName}${
+          subRecipeName ? ` -> Other ingredient ${subRecipeName}` : ''
+        }: no ingredients`,
+      )
+    }
+
+    return
   }
 
   ingredients.forEach((ingredient, i) => {
     if (!ingredient.label) {
       signale.fatal(
-        chalk`Error while parsing recipe {yellow ${title}} -> {blue ingredient #${i}}: {red no label}`,
+        chalk`Recipe {yellow ${recipeName}}${subRecipeName ? chalk` -> Other ingredient {blue ${subRecipeName}}` : ''} -> Ingredient {blue #${
+          i + 1
+        }}: {red no label}`,
       )
-      throw new Error(`${title} - Ingredient #${i}: No label`)
+      throw new Error(`Recipe ${recipeName}${subRecipeName ? chalk` -> Other ingredient ${subRecipeName}` : ''} -> Ingredient #${i + 1}: no label`)
     }
 
     if (!ingredient.quantity) {
-      signale.debug(
-        chalk`Error while parsing recipe {yellow ${title}} -> {blue ${ingredient.label}}: {red no quantity}`,
+      signale.warn(
+        chalk`Recipe {yellow ${recipeName}}${subRecipeName ? chalk` -> Other ingredient {blue ${subRecipeName}}` : ''} -> Ingredient {blue ${ingredient.label}}: {red no quantity}`,
       )
     }
 
     if (!ingredient.unit) {
-      signale.debug(
-        chalk`Error while parsing recipe {yellow ${title}} -> {blue ${ingredient.label}}: {red no unit}`,
+      signale.warn(
+        chalk`Recipe {yellow ${recipeName}}${subRecipeName ? chalk` -> Other ingredient {blue ${subRecipeName}}` : ''} -> Ingredient {blue ${ingredient.label}}: {red no unit}`,
       )
     }
   })
 }
 
-function checkFields(recipe: Recipe): void {
+export function checkRecipe(recipe: Recipe): void {
   if (!recipe.title) {
-    signale.fatal(
-      chalk`Error while parsing recipe {yellow ${recipe.slug}}: {red no title}`,
-    )
-    throw new Error(`${recipe.slug}: No title`)
+    signale.fatal(chalk`Recipe {yellow ${recipe.slug}}: {red no title}`)
+    throw new Error(`Recipe ${recipe.slug}: no title`)
   }
 
   if (!recipe.description) {
-    signale.debug(
-      chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no description}`,
-    )
+    signale.warn(chalk`Recipe {yellow ${recipe.slug}}: {red no description}`)
   }
 
   if (!recipe.photoUrl) {
-    signale.debug(
-      chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no photo}`,
-    )
-    throw new Error(`${recipe.title}: No photo`)
+    signale.warn(chalk`Recipe {yellow ${recipe.slug}}: {red no photo}`)
+    throw new Error(`Recipe ${recipe.slug}: no photo`)
   }
 
   if (!recipe.preparationTime) {
-    signale.debug(
-      chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no preparation time}`,
+    signale.warn(
+      chalk`Recipe {yellow ${recipe.slug}}: {red no preparation time}`,
     )
-    throw new Error(`${recipe.title}: No preparation time`)
+    throw new Error(`Recipe ${recipe.slug}: no preparation time`)
   }
 
   if (!recipe.cookingTime) {
-    signale.debug(
-      chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no cooking time}`,
-    )
+    signale.warn(chalk`Recipe {yellow ${recipe.slug}}: {red no cooking time}`)
   }
 
   if (!recipe.servings) {
-    signale.fatal(
-      chalk`Error while parsing recipe {yellow ${recipe.slug}}: {red no servings}`,
-    )
-    throw new Error(`${recipe.title}: Missing # servings`)
+    signale.fatal(chalk`Recipe {yellow ${recipe.slug}}: {red no servings}`)
+    throw new Error(`Recipe ${recipe.slug}: Missing # servings`)
   }
 
-  checkIngredients(recipe.title, recipe.ingredients)
+  checkIngredients(
+    recipe.slug,
+    null,
+    recipe.ingredients,
+    !recipe.otherIngredients || recipe.otherIngredients.length <= 0,
+  )
 
   if (recipe.otherIngredients?.length > 0) {
     recipe.otherIngredients.forEach((otherIngredient, i) => {
       if (!otherIngredient.title) {
         signale.fatal(
-          chalk`Error while parsing recipe {yellow ${recipe.title}} -> {blue otherIngredient #${i}}: {red no title}`,
+          chalk`Recipe {yellow ${recipe.slug}} -> Other Ingredient {blue #${
+            i + 1
+          }}: {red no title}`,
         )
-        throw new Error(`${recipe.title} - Other ingredient #${i}: No title`)
+        throw new Error(
+          `Recipe ${recipe.slug} -> Other ingredient #${i + 1}: no title`,
+        )
       }
 
-      checkIngredients(otherIngredient.title, otherIngredient.ingredients)
+      checkIngredients(
+        recipe.slug,
+        otherIngredient.title,
+        otherIngredient.ingredients,
+        true,
+      )
     })
   }
 
   if (recipe.instructions?.length <= 0) {
-    signale.debug(
-      chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no instructions}`,
-    )
+    signale.warn(chalk`Recipe {yellow ${recipe.slug}}: {red no instructions}`)
   }
 
   if (!recipe.createdAt) {
-    signale.debug(
-      chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no createdAt date}`,
-    )
+    signale.fatal(chalk`Recipe {yellow ${recipe.slug}}: {red no createdAt date}`)
+    throw new Error(`Recipe ${recipe.slug}: no createdAt`)
   }
 
-  if (!recipe.createdAt) {
-    signale.debug(
-      chalk`Error while parsing recipe {yellow ${recipe.title}}: {red no createdAtTimestamp date}`,
+  if (!recipe.createdAtTimestamp) {
+    signale.fatal(
+      chalk`Recipe {yellow ${recipe.slug}}: {red no createdAtTimestamp date}`,
     )
-  }
-}
-
-export async function checkRecipe(recipe: Recipe): Promise<void> {
-  try {
-    checkFields(recipe)
-  } catch (e) {
-    // Send notification to owner device
-    await sendNotification({
-      devicesIds: [OWNER_DEVICE_ID],
-      notification: {
-        title: 'Failed to parse recipe',
-        body: e.message,
-      },
-    })
-    throw e
+    throw new Error(`Recipe ${recipe.slug}: no createdAtTimestamp`)
   }
 }
