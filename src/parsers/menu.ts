@@ -3,6 +3,16 @@ import { dateRegex, recipeSlugRegex } from '../constants'
 import { Menu } from '../types'
 import { cleanString } from '../utils'
 
+function getDescription($): string {
+  let description = $('div.elementor-text-editor p').eq(1).text()
+
+  if (!description) {
+    description = $('div.blog-main div.blog-content p').eq(0).text()
+  }
+
+  return description
+}
+
 function getSections($) {
   return $('div.elementor-inner > div.elementor-section-wrap > section')
 }
@@ -43,9 +53,7 @@ function getMealTitle($meal): string {
 }
 
 function getMealUrl($meal): string {
-  let url = $meal
-    .find('div.elementor-image a')
-    .attr('href')
+  let url = $meal.find('div.elementor-image a').attr('href')
 
   if (!url) {
     url = $meal.find('a.elementor-post__thumbnail__link').attr('href')
@@ -78,13 +86,11 @@ function parseMenu(
 ): Pick<Menu, 'title' | 'description' | 'photoUrl' | 'date' | 'dailyMenus'> {
   const $html = cheerio.load(html)
   const title = cleanString($html('div.blog-main > h1').text())
-  const description = cleanString(
-    $html('div.elementor-text-editor p').eq(1).text(),
-  )
+  const description = cleanString(getDescription($html))
   const photoUrl = $html(
     'div.blog-main > div.blog-rightsidebar-img > img',
   ).attr('src')
-  const [date] = dateRegex.exec(title.toLowerCase()) || []
+  const [date] = dateRegex.exec(description.toLowerCase()) || []
   const $sections = getSections($html)
   const dailyMenus = []
 
