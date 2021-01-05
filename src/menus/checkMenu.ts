@@ -1,15 +1,13 @@
 import { Signale } from 'signale'
 import * as chalk from 'chalk'
 import { Menu } from '../types'
-import { sendNotification } from '../workers/apnDispatcher'
-import { OWNER_DEVICE_ID } from '../env'
 
 const signale = new Signale({ scope: 'menu-parser' })
 
 const daysLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 const dishesLabels = ['Starter', 'Dish', 'Dessert']
 
-function checkFields(menu: Menu): void {
+export function checkMenu(menu: Menu): void {
   if (!menu.title) {
     signale.fatal(
       chalk`Error while parsing menu {yellow ${menu.slug}}: {red no title}`,
@@ -76,20 +74,4 @@ function checkFields(menu: Menu): void {
       }
     })
   })
-}
-
-export async function checkMenu(menu: Menu): Promise<void> {
-  try {
-    checkFields(menu)
-  } catch (e) {
-    // Send notification to owner device
-    await sendNotification({
-      devicesIds: [OWNER_DEVICE_ID],
-      notification: {
-        title: 'Failed to parse menu',
-        body: e.message,
-      },
-    })
-    throw e
-  }
 }
