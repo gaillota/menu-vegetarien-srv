@@ -1,16 +1,21 @@
 import { ApolloServer, gql } from 'apollo-server'
+import { Signale } from 'signale'
+import * as chalk from 'chalk'
 import { getKey, setKey } from '../redis'
-import { DeviceToken } from '../types'
+import { DeviceToken, User } from '../types'
 import { main as indexNewRecipes } from '../scripts/indexNewRecipes'
 import { main as indexNewMenus } from '../scripts/indexNewMenus'
 import { sendNotification } from '../workers/apnDispatcher'
 import { OWNER_DEVICE_ID } from '../env'
 import { sendToRecipeParser } from '../workers/recipeParser'
 import { sendToRecipeFilterer } from '../workers/recipeFilterer'
-import IsEnvDirective from './directives/isEnv'
+import { getToken, getUserFromToken } from './utils'
+import { IsAuthenticatedDirective } from './directives/isAuthenticated'
+
+const signale = new Signale({ scope: 'apollo' })
 
 const typeDefs = gql`
-  directive @isEnv(envName: String = "development") on FIELD_DEFINITION
+  directive @isAuthenticated on QUERY | FIELD | FIELD_DEFINITION
 
   enum NotificationType {
     ALERT
@@ -30,15 +35,14 @@ const typeDefs = gql`
   }
 
   type Query {
-    indexNewRecipe(slug: String!): Boolean
-    indexNewRecipes: Boolean
-    indexNewMenus: Boolean
+    indexNewRecipe(slug: String!): Boolean @isAuthenticated
+    indexNewRecipes: Boolean @isAuthenticated
+    indexNewMenus: Boolean @isAuthenticated
   }
 
   type Mutation {
-    pushNotification(notification: Notification): Boolean
-      @isEnv(envName: "development")
-    setDeviceToken(deviceToken: DeviceToken!): Boolean
+    pushNotification(notification: Notification): Boolean @isAuthenticated
+    setDeviceToken(deviceToken: DeviceToken!): Boolean @isAuthenticated
   }
 `
 
@@ -104,11 +108,24 @@ const resolvers = {
 }
 
 export async function initApollo(): Promise<ApolloServer> {
+  const defaultUser: User = {
+    id: '1',
+  }
+  const token = getToken(defaultUser)
+
+  signale.success(chalk`{yellow JWT token} for default user: {green ${token}}`)
+
   return new ApolloServer({
     typeDefs,
     resolvers,
     schemaDirectives: {
-      isEnv: IsEnvDirective,
+      isAuthenticated: IsAuthenticatedDirective,
+    },
+    context: ({ req }) => {
+      const token = req.headers.authorization || ''
+      const user = getUserFromToken(token)
+
+      return { user }
     },
   })
 }

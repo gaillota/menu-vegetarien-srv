@@ -1,9 +1,11 @@
 require('dotenv').config()
-import * as signale from 'signale'
+import { Signale } from 'signale'
 import { initRabbit } from './rabbitmq'
 import { initRedis } from './redis'
 import { initAlgolia } from './algolia'
 import { initApollo } from './apollo'
+
+const signale = new Signale({ scope: 'http' })
 
 Promise.all([initApollo(), initRabbit(), initRedis(), initAlgolia()])
   .then(([server]) => {

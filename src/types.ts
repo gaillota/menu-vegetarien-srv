@@ -82,3 +82,7 @@ export interface DeviceToken {
   token: string
   createdAt: number
 }
+
+export interface User {
+  id: string
+}

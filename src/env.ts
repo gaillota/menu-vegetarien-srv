@@ -8,3 +8,4 @@ export const APN_KEY_ID = process.env.APN_KEY_ID
 export const APN_TEAM_ID = process.env.APN_TEAM_ID
 export const APN_APP_ID = process.env.APN_APP_ID
 export const OWNER_DEVICE_ID = process.env.OWNER_DEVICE_ID
+export const JWT_SECRET = process.env.JWT_SECRET
