@@ -1,3 +1,4 @@
+require('dotenv').config()
 import * as signale from 'signale'
 import { initRabbit } from './rabbitmq'
 import { initRedis } from './redis'
@@ -11,6 +12,6 @@ Promise.all([initApollo(), initRabbit(), initRedis(), initAlgolia()])
     })
   })
   .catch((error) => {
+    signale.error(`❌ Could not init server`)
     signale.error(error)
-    signale.error(`Could not init server`)
   })
