@@ -4,56 +4,52 @@ import { Menu } from '../types'
 
 const signale = new Signale({ scope: 'menu-parser' })
 
-const daysLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+const daysLabels = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+]
 const dishesLabels = ['Starter', 'Dish', 'Dessert']
 
 export function checkMenu(menu: Menu): void {
   if (!menu.slug) {
-    signale.fatal(
-      chalk`Menu {yellow ${JSON.stringify(menu)}}: {red no slug}`,
-    )
+    signale.fatal(chalk`Menu {yellow ${JSON.stringify(menu)}}: {red no slug}`)
     throw new Error(`Menu ${menu.slug}: no slug`)
   }
 
   if (!menu.title) {
-    signale.fatal(
-      chalk`Menu {yellow ${menu.slug}}: {red no title}`,
-    )
+    signale.fatal(chalk`Menu {yellow ${menu.slug}}: {red no title}`)
     throw new Error(`Menu ${menu.slug}: no title`)
   }
 
   if (!menu.date) {
-    signale.fatal(
-      chalk`Menu {yellow ${menu.slug}}: {red no date}`,
-    )
+    signale.fatal(chalk`Menu {yellow ${menu.slug}}: {red no date}`)
     throw new Error(`Menu ${menu.slug}: no date`)
   }
 
   if (!menu.description) {
-    signale.warn(
-      chalk`Menu {yellow ${menu.slug}}: {red no description}`,
-    )
+    signale.warn(chalk`Menu {yellow ${menu.slug}}: {red no description}`)
   }
 
   if (!menu.photoUrl) {
-    signale.fatal(
-      chalk`Menu {yellow ${menu.slug}}: {red no photo}`,
-    )
+    signale.fatal(chalk`Menu {yellow ${menu.slug}}: {red no photo}`)
     throw new Error(`Menu ${menu.slug}: no photo`)
   }
 
   if (!menu.dailyMenus) {
-    signale.fatal(
-      chalk`Menu {yellow ${menu.slug}}: {red no dailyMenus}`,
-    )
+    signale.fatal(chalk`Menu {yellow ${menu.slug}}: {red no dailyMenus}`)
     throw new Error(`Menu ${menu.slug}: no dailyMenus`)
   }
 
-  if (menu.dailyMenus.length < 5) {
+  if (menu.dailyMenus.length < daysLabels.length) {
     signale.fatal(
-      chalk`Menu {yellow ${menu.slug}}: {red less than 5 dailyMenus}`,
+      chalk`Menu {yellow ${menu.slug}}: {red missing on or more daily menus}`,
     )
-    throw new Error(`Menu ${menu.slug}: less than 5 dailyMenus`)
+    throw new Error(`Menu ${menu.slug}: missing on or more daily menus`)
   }
 
   menu.dailyMenus.forEach((courses, i) => {
@@ -66,7 +62,7 @@ export function checkMenu(menu: Menu): void {
       throw new Error(`Menu ${menu.slug}: missing ${dayLabel} menu`)
     }
 
-    if (courses.length < 3) {
+    if (courses.length < dishesLabels.length) {
       signale.fatal(
         chalk`Menu {yellow ${menu.slug}}: {red missing dish in ${dayLabel} menu}`,
       )
@@ -80,21 +76,27 @@ export function checkMenu(menu: Menu): void {
         signale.fatal(
           chalk`Menu {yellow ${menu.slug}} -> {blue ${dayLabel}} -> {green ${dishLabel}}: {red no slug}`,
         )
-        throw new Error(`Menu ${menu.slug} -> ${dayLabel} -> ${dishLabel}: no slug`)
+        throw new Error(
+          `Menu ${menu.slug} -> ${dayLabel} -> ${dishLabel}: no slug`,
+        )
       }
 
       if (!dish.title) {
         signale.fatal(
           chalk`Menu {yellow ${menu.slug}} -> {blue ${dayLabel}} -> {green ${dish.slug} (${dishLabel})}: {red no name}`,
         )
-        throw new Error(`Menu ${menu.slug} -> ${dayLabel} -> ${dishLabel}: no name`)
+        throw new Error(
+          `Menu ${menu.slug} -> ${dayLabel} -> ${dishLabel}: no name`,
+        )
       }
 
       if (!dish.photoUrl) {
         signale.fatal(
           chalk`Menu {yellow ${menu.slug}} -> {blue ${dayLabel}} -> {green ${dish.slug} (${dishLabel})}: {red no photo}`,
         )
-        throw new Error(`Menu ${menu.slug} -> ${dayLabel} -> ${dishLabel}: no photo`)
+        throw new Error(
+          `Menu ${menu.slug} -> ${dayLabel} -> ${dishLabel}: no photo`,
+        )
       }
     })
   })
