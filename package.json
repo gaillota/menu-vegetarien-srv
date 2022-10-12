@@ -47,7 +47,7 @@
     "algoliasearch": "^4.8.3",
     "amqplib": "^0.6.0",
     "apn": "^2.2.0",
-    "apollo-server": "^2.19.1",
+    "apollo-server": "^2.25.4",
     "chalk": "^4.1.0",
     "cheerio": "^1.0.0-rc.5",
     "commander": "^6.2.1",
